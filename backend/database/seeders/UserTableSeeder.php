@@ -13,16 +13,42 @@ class UserTableSeeder extends Seeder
     {
         $user = [
             [
-                'id'             => 1,
+           
                 'name'           => 'Admin',
                 'email'          => 'admin@admin.com',
+                'phone_no' =>'0434343435',
                 'password'       => bcrypt('password'),
                 'remember_token' => null,
             ],
             [
-                'id'             => 2,
+               
                 'name'           => 'Sub Admin',
                 'email'          => 'admin@gmail.com',
+                'phone_no' =>'0934343421',
+                'password'       => bcrypt('password'),
+                'remember_token' => null,
+            ],
+            [
+               
+                'name'           => 'Ko Ko',
+                'email'          => 'koko@gmail.com',
+                'phone_no' =>'0934343235',
+                'password'       => bcrypt('password'),
+                'remember_token' => null,
+            ],
+            [
+               
+                'name'           => 'Mg Mg',
+                'email'          => 'mgmg@gmail.com',
+                'phone_no' =>'0934243435',
+                'password'       => bcrypt('password'),
+                'remember_token' => null,
+            ],
+            [
+               
+                'name'           => 'Aye Aye',
+                'email'          => 'aye@gmail.com',
+                'phone_no' =>'0939343435',
                 'password'       => bcrypt('password'),
                 'remember_token' => null,
             ],
