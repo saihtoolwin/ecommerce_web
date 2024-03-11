@@ -18,7 +18,7 @@
     <div class="card">
         <h5 class="card-header font-weight-bold ">  {{ trans('global.create') }} {{ trans('cruds.user.title_singular') }}</h5>
         <div class="card-body mt-4">
-            <form method="POST" action="{{ route('admin.users.store') }}" enctype="multipart/form-data" id="myForm">
+            <form method="POST" action="{{ route('admin.user.store') }}" enctype="multipart/form-data" id="myForm">
                 @csrf
                 <div class="row">
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
@@ -64,32 +64,6 @@
                         </div>
                     </div>
 
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label class="required" for="roles">{{ trans('cruds.role.title') }}</label>
-                            <div style="padding-bottom: 4px">
-                                <span class="btn btn-info btn-xs select-all"
-                                    style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                                <span class="btn btn-info btn-xs deselect-all"
-                                    style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
-                            </div>
-                            <select class="form-control select2 {{ $errors->has('roles') ? 'is-invalid' : '' }}"
-                                name="roles[]" id="roles" multiple >
-                                @foreach ($roles as $id => $role)
-                                    <option value="{{ $id }}"
-                                        {{ in_array($id, old('roles', [])) ? 'selected' : '' }}>{{ $role }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <span class="role_error"></span>
-                            @if ($errors->has('roles'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('roles') }}
-                                </div>
-                            @endif
-                            {{-- <span class="help-block">{{ trans('cruds.role.fields.roles_helper') }}</span> --}}
-                        </div>
-                    </div>
 
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-flex">
                         <div class="form-group mt-2 mr-3">
