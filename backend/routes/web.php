@@ -9,7 +9,7 @@ Route::get('/', function () {
     return redirect()->route('admin.home');
 });
 
-
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], function () {
     Route::get('/home','HomeController@index')->name('home');
     // Route::get('/home', [HomeController::class, 'index'])->name('home');

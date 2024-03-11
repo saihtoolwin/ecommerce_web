@@ -50,20 +50,11 @@
                             {{ $user->email_verified_at }}
                         </td>
                     </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.user.fields.roles') }}
-                        </th>
-                        <td>
-                            @foreach($user->roles as $key => $roles)
-                                <span class="label label-info badge bg-info my-1 rounded-pill">{{ $roles->title }}</span>
-                            @endforeach
-                        </td>
-                    </tr>
+                    
                 </tbody>
             </table>
             <div class="form-group">
-                <a class="btn btn-secondary mt-3" href="{{ route('admin.users.index') }}">
+                <a class="btn btn-secondary mt-3" href="{{ route('admin.user.index') }}">
                     {{ trans('global.back_to_list') }}
                 </a>
             </div>

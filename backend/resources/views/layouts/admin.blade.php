@@ -29,17 +29,20 @@
 
     <!-- Template Stylesheet -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <style>
+       
+    </style>
 </head>
 
 <body>
     <div class="container-xxl position-relative bg-white d-flex p-0">
         <!-- Spinner Start -->
-        <div id="spinner"
+        {{-- <div id="spinner"
             class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
-        </div>
+        </div> --}}
         <!-- Spinner End -->
 
 
@@ -90,7 +93,7 @@
 
 
         <!-- Content Start -->
-        <div class="content">
+        <div class="content ">
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
                 <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
@@ -178,18 +181,27 @@
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
+                            <a href="{{ route('logout') }}" class="dropdown-item"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log
+                                Out</a>
+
+                            <!-- Logout Form -->
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                            </form>
                         </div>
                     </div>
                 </div>
             </nav>
             <!-- Navbar End -->
 
-            @yield('content')
             <!-- Sale & Revenue Start -->
-            {{-- <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-6 col-xl-3">
+            <div class="container-fluid  pt-4 px-4">
+
+                @yield('content')
+
+                {{-- <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-line fa-3x text-primary"></i>
                             <div class="ms-3">
@@ -224,9 +236,9 @@
                                 <h6 class="mb-0">$1234</h6>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div> --}}
+                    </div> --}}
+
+            </div>
             <!-- Sale & Revenue End -->
 
 
@@ -453,9 +465,9 @@
 
 
             <!-- Footer Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light rounded-top p-4">
-                    <div class="row">
+            <div class="container-fluid   pt-4 px-4">
+                <div class="bg-light  rounded-top p-4">
+                    <div class="row ">
                         <div class="col-12 col-sm-6 text-center text-sm-start">
                             &copy; <a href="#">Your Site Name</a>, All Right Reserved.
                         </div>
