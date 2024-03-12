@@ -23,6 +23,7 @@ class RatingTableSeeder extends Seeder
             'user_id' => 2,
             'product_id' => 2,
             'rating_value' => 5,
+            'review_text' => 'It is bad.',
             'rating_date' => now(),
         ]);
 

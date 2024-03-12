@@ -3,70 +3,57 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Rating;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RatingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    protected $users;
+    protected $ratings;
+    protected $products;
+    public function __construct(User $user,Rating $rating,Product $product){
+        $this->users= $user;
+        $this->ratings= $rating;
+        $this->products= $product;
+    }
     public function index()
     {
-        //
+        $ratings=$this->ratings->with(['user','product'])->get();
+        return view('admin.rating.index',compact(['ratings']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function create()
     {
-        //
+        
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+   
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show($id)
     {
-        //
+        $rating=$this->ratings->with(['user','product'])->findOrFail($id);
+        
+        return view('admin.rating.show',compact(['rating']));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit($id)
     {
-        //
+        $rating=$this->ratings->findOrFail($id);
+        $users=$this->users->all();
+        $products=$this->products->all();
+        return view('admin.rating.edit',compact(['products','users','rating']));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function update(Request $request, $id)
     {
         //

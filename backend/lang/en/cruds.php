@@ -1,6 +1,6 @@
 <?php
 return [
-    
+
     'user' => [
         'title'          => 'Users',
         'title_singular' => 'User',
@@ -27,6 +27,19 @@ return [
             'deleted_at'               => 'Deleted at',
             'deleted_at_helper'        => ' ',
             'all_privilege'            => 'All Privillege'
+        ],
+    ],
+    'rating' => [
+        'title'          => 'Ratings',
+        'title_singular' => 'Rating',
+        'fields'         => [
+            'no'            => 'No',
+            'id'            => 'ID',
+            'user'          => 'User',
+            'product'       => 'Product',
+            'rating_value'  => 'Rating Value',
+            'review_text'   => 'Review Text',
+            'rating_date'   => 'Rating Date',
         ],
     ],
 

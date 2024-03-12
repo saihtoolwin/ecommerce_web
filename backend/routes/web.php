@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
+    // dd($user);
     return redirect()->route('admin.home');
 });
 
@@ -16,6 +17,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
 
     // User
     Route::resource('/user','UserController');
+    Route::resource('/rating','RatingController');
 });
 
 
