@@ -16,6 +16,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    {{-- Kendo  --}}
+    <link href="https://kendo.cdn.telerik.com/themes/7.2.0/default/default-main.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -30,7 +34,9 @@
     <!-- Template Stylesheet -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <style>
-       
+       .is-invalid{
+        border: solid red !important;
+       }
     </style>
 </head>
 
@@ -198,7 +204,44 @@
 
             <!-- Sale & Revenue Start -->
             <div class="container-fluid  pt-4 px-4">
+                <div>
+                    @if (session('message'))
+                        <div class="mb-2">
+                            <div class="col-lg-12 alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fa fa-exclamation-circle me-2"></i>
+                                <strong>{{ session('message') }}</strong>
 
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    {{-- <span aria-hidden="true">&times;</span> --}}
+                                {{-- </button> --}}
+
+                                {{-- <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                <i class="fa fa-exclamation-circle me-2"></i>An icon & dismissing primary alert—check it out!
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div> --}}
+                            </div>
+                        </div>
+                    @endif
+                    @if (session('wrong_message'))
+                        <div class="mb-2">
+                            <div class="col-lg-12 alert alert-danger alert-dismissible" role="alert">
+                                <strong>{{ session('wrong_message') }}</strong>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+                    @if ($errors->count() > 0)
+                        <div class="alert alert-danger">
+                            <ul class="list-unstyled">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
                 @yield('content')
 
                 {{-- <div class="col-sm-6 col-xl-3">
@@ -502,6 +545,9 @@
     <script src="{{ asset('lib/tempusdominus/js/moment.min.js') }}"></script>
     <script src="{{ asset('lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ asset('lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+    {{-- kendo --}}
+    <script src="{{asset('js/kendo.all.min.js')}}"></script>
 
     <!-- Template Javascript -->
     <script src="{{ asset('js/main.js') }}"></script>

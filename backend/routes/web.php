@@ -17,7 +17,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
 
     // User
     Route::resource('/user','UserController');
+
+    // Rating
     Route::resource('/rating','RatingController');
+
+    // Category
+    Route::resource('/category','CategoryController');
 });
 
 

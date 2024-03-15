@@ -18,9 +18,8 @@
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <div class="form-group mb-3">
                             <label class="required" for="user_id">{{ trans('cruds.rating.fields.user') }}</label>
-                            {{-- <input class="form-control {{ $errors->has('user_id') ? 'is-invalid' : '' }}" type="text"
-                                name="user_id" id="user_id" value="{{ old('user_id', $rating->user_id) }}" > --}}
-                                <select name="user_id" class="form-control" id="">
+                            
+                                <select name="user_id" class="form-control {{$errors->has('user_id') ? 'is-invalid' : ''}}" id="">
                                     <option value="">Please Select User</option>
                                     @foreach ($users as $user)
                                         <option value="{{$user->id}}" {{$rating->user_id==$user->id ? 'selected' : ' '}}>{{$user->name}}</option>
@@ -38,8 +37,7 @@
                         <div class="form-group mb-3">
                             <div class="form-group mb-3">
                                 <label class="required" for="product_id">{{ trans('cruds.rating.fields.product') }}</label>
-                              
-                                    <select name="product_id" class="form-control" id="">
+                                    <select name="product_id" class="form-control {{$errors->has('product_id') ? 'is-invalid' : ' '}}" id="">
                                         <option value="">Please Select Product</option>
                                         @foreach ($products as $product)
                                             <option value="{{$product->id}}" {{$rating->product_id==$product->id ? 'selected' : ' '}}>{{$product->name}}</option>
@@ -63,25 +61,28 @@
                                     {{ $errors->first('rating_value') }}
                                 </div>
                             @endif
-                           
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <div class="form-group mb-3">
-                            <label class="required" for="review_text">{{ trans('cruds.rating.fields.review_text') }}</label>
-                            <textarea name="review_text" id="" cols="30" rows="10">{{$rating->review_text}}</textarea>
-                            @if ($errors->has('review_text'))
+                            <label class="required" for="rating_date">{{ trans('cruds.rating.fields.rating_date') }}</label>
+                            @php
+                                $ratingDate=$rating->rating_date ? date('Y-m-d', strtotime($rating->rating_date)) : ' ';
+                            @endphp
+                           <input type="date" class="form-control  {{$errors->has('rating_date') ? 'is-invalid' : ' '}}" name="rating_date" value="{{$ratingDate}}" id="">
+                            @if ($errors->has('rating_date'))
                                 <div class="invalid-feedback">
-                                    {{ $errors->first('review_text') }}
+                                    {{ $errors->first('rating_date') }}
                                 </div>
                             @endif
                            
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                    
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                         <div class="form-group mb-3">
                             <label class="required" for="review_text">{{ trans('cruds.rating.fields.review_text') }}</label>
-                           <input type="date" name="rating_date" value="{{old('rating_date',$rating->rating_date)}}" id="">
+                            <textarea name="review_text" id="" class="form-control {{$errors->has('review_text') ? 'is-invalid' : ' '}}" cols="30" rows="10">{{$rating->review_text}}</textarea>
                             @if ($errors->has('review_text'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('review_text') }}

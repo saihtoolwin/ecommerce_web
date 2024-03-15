@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreRatingRequest;
+use App\Http\Requests\UpdateRatingRequest;
 use App\Models\Product;
 use App\Models\Rating;
 use App\Models\User;
@@ -27,13 +29,16 @@ class RatingController extends Controller
     
     public function create()
     {
-        
+        $products=$this->products->all();
+        $users=$this->users->all();
+        return view('admin.rating.create',compact('products','users'));
     }
 
    
-    public function store(Request $request)
+    public function store(StoreRatingRequest $request)
     {
-        //
+        $rating=$this->ratings->create($request->all());
+        return redirect()->route('admin.rating.index')->with('message','Rating Created Successfully');
     }
 
    
@@ -54,19 +59,19 @@ class RatingController extends Controller
     }
 
    
-    public function update(Request $request, $id)
+    public function update(UpdateRatingRequest $request, $id)
     {
-        //
+        $rating = $this->ratings->findOrFail($id);
+       $rating->update($request->all());
+       return redirect()->route('admin.rating.index')->with('message',' Rating Updated Successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
-        //
+        $rating=$this->ratings->findOrFail($id);
+        
+        $rating->delete();
+        return redirect()->route('admin.rating.index')->with('message','Rating Deleted successfully');
     }
 }

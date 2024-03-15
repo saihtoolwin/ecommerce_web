@@ -2,15 +2,10 @@
 @section('content')
     <div class="card ">
         <div class="custom-header  d-flex justify-content-between px-3">
-
-
-            <p class="mt-3" style="font-size: 20px">{{ trans('cruds.user.title_singular') }} {{ trans('global.list') }}</p>
-
-
-
+            <p class="mt-3" style="font-size: 20px">{{ trans('cruds.category.title_singular') }} {{ trans('global.list') }}</p>
             <div>
-                <a class="mt-3 btn btn-success" href="{{ route('admin.user.create') }}">
-                    {{ trans('global.add') }} {{ trans('cruds.user.title_singular') }}
+                <a class="mt-3 btn btn-success" href="{{ route('admin.category.create') }}">
+                    {{ trans('global.add') }} {{ trans('cruds.category.title_singular') }}
                 </a>
             </div>
 
@@ -19,18 +14,18 @@
 
         <div class="card-body text-center">
             <div class="table-responsive">
-                <table class=" table table-bordered table-striped table-hover datatable datatable-User">
+                <table class=" table table-bordered table-striped table-hover datatable datatable-category">
                     <thead>
                         <tr>
                             <th>
-                                {{ trans('cruds.user.fields.name') }}
+                                {{ trans('cruds.category.fields.parent_id') }}
                             </th>
                             <th>
-                                {{ trans('cruds.user.fields.email') }}
+                                {{ trans('cruds.category.fields.name') }}
                             </th>
 
                             <th>
-                                {{ trans('cruds.user.fields.phone_no') }}
+                                {{ trans('cruds.category.fields.image') }}
                             </th>
                             <th>
                                 {{ trans('global.actions') }}
@@ -38,32 +33,32 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $key => $user)
-                            <tr data-entry-id="{{ $user->id }}">
+                        @foreach ($categorys as $key => $category)
+                            <tr data-entry-id="{{ $category->id }}">
                                 <td>
-                                    {{ $user->name ?? '' }}
+                                    {{ $category->name ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $user->email ?? '' }}
+                                    {{ $category->email ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $user->phone_no ?? '' }}
+                                    {{ $category->phone_no ?? '' }}
                                 </td>
                                 <td>
                                     <a class="p-0 glow text-white btn btn-primary"
                                         style="width: 60px;display: inline-block;line-height: 36px;color:grey;"
-                                        title="view" href="{{ route('admin.user.show', $user->id) }}">
+                                        title="view" href="{{ route('admin.category.show', $category->id) }}">
                                         Show
                                     </a>
 
                                     <a class="p-0 glow text-white btn btn-success"
                                         style="width: 60px;display: inline-block;line-height: 36px;color:grey;"
-                                        title="edit" href="{{ route('admin.user.edit', $user->id) }}">
+                                        title="edit" href="{{ route('admin.category.edit', $category->id) }}">
                                         Edit
                                     </a>
 
-                                    <form id="orderDelete-{{ $user->id }}"
-                                        action="{{ route('admin.user.destroy', $user->id) }}" method="POST"
+                                    <form id="orderDelete-{{ $category->id }}"
+                                        action="{{ route('admin.category.destroy', $category->id) }}" method="POST"
                                         style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -83,7 +78,7 @@
                     </tbody>
                 </table>
                 <div class="mt-3" style="float: right;">
-                    {{-- {{ $users->links() }} --}}
+                    {{-- {{ $categorys->links() }} --}}
                 </div>
             </div>
         </div>
@@ -94,11 +89,11 @@
     <script>
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-            @can('user_delete')
+            @can('category_delete')
                 let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.users.massDestroy') }}",
+                    url: "{{ route('admin.categorys.massDestroy') }}",
                     className: 'btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -143,7 +138,7 @@
                 bPaginate: false,
                 info: false,
             });
-            let table = $('.datatable-User:not(.ajaxTable)').DataTable({
+            let table = $('.datatable-category:not(.ajaxTable)').DataTable({
                 buttons: dtButtons
             })
             $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {

@@ -25,7 +25,7 @@
                 </div>
             </div>
             <a href="{{route('admin.user.index')}}" class="nav-item nav-link {{ Request::is('admin/user*') ? 'active' : '' }}"><i class="fa fa-th me-2"></i>Users</a>
-            <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Category</a>
+            <a href="{{route('admin.category.index')}}" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Category</a>
             <a href="" class="nav-item nav-link "><i class="fa fa-table me-2"></i>Products</a>
             <a href="{{route('admin.rating.index')}}" class="nav-item nav-link {{ Request::is('admin/rating*') ? 'active' : '' }}"><i class="fa fa-chart-bar me-2"></i>Rating</a>
             <div class="nav-item dropdown">

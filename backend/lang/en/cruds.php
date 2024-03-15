@@ -42,5 +42,15 @@ return [
             'rating_date'   => 'Rating Date',
         ],
     ],
+    'category'=>[
+        'title' => 'Category',
+        'title_singular' => 'Category Title',
+        'fields'    =>[
+            'no'    => 'No',
+            'parent_id'=>'Parent Category Name',
+            'name' => 'Name',
+            'image' => 'Image'
+        ],
+    ],
 
 ];
