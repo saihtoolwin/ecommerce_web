@@ -18,6 +18,9 @@
                     <thead>
                         <tr>
                             <th>
+                                {{ trans('cruds.category.fields.no') }}
+                            </th>
+                            <th>
                                 {{ trans('cruds.category.fields.parent_id') }}
                             </th>
                             <th>
@@ -33,8 +36,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($categorys as $key => $category)
+                        @foreach ($categories as $key => $category)
                             <tr data-entry-id="{{ $category->id }}">
+                                <td>
+                                    {{ $loop->iteration ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $category->parent_id ?? '' }}
+                                </td>
                                 <td>
                                     {{ $category->name ?? '' }}
                                 </td>

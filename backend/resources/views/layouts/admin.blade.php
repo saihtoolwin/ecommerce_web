@@ -31,6 +31,10 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
 
+    {{-- DropZone --}}
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
+
     <!-- Template Stylesheet -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <style>
@@ -38,6 +42,7 @@
         border: solid red !important;
        }
     </style>
+    @yield('styles')
 </head>
 
 <body>
@@ -546,11 +551,16 @@
     <script src="{{ asset('lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ asset('lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
+    {{-- DropZone --}}
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+
     {{-- kendo --}}
     <script src="{{asset('js/kendo.all.min.js')}}"></script>
 
     <!-- Template Javascript -->
     <script src="{{ asset('js/main.js') }}"></script>
+
+    @yield('scripts')
 </body>
 
 </html>

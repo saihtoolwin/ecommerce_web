@@ -1,69 +1,156 @@
 @extends('layouts.admin')
 @section('styles')
     <style>
-         .title_error {
-            color: red;
-            font-size: 13px;
-            font-style: italic;
-        }
+        .drop-zone {
+            // layout.css Style
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            height: 200px;
+            border-width: 2px;
+            margin-bottom: 20px;
 
-        .required:after {
-            content: " *";
-            color: red;
+            // Style
+            color: #646C7F;
+            border-style: dashed;
+            border-color: #0087F7;
+            border-radius: 5px;
+            /* line-height: 200px; */
+            cursor: pointer;
+
+            &.is-dragover {
+                color: #999;
+                border-style: solid;
+            }
+
+            &.has-images {
+                justify-content: flex-start;
+
+                .msg {
+                    display: none;
+                }
+            }
+
+
+            input.has-image {
+                opacity: 1;
+                width: 0px;
+                heigth: 0px;
+            }
+
+            input.receiver {
+                /* position: absolute; */
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                background-color: red;
+                cursor: pointer;
+            }
+
+            .preview {
+                display: flex;
+                align-items: center;
+                position: relative;
+                cursor: default;
+                margin: 0 5px;
+                height: 180px;
+                width: 300px !important;
+                border-radius: 5px;
+
+                &:hover {
+                    .details {
+                        display: flex;
+                    }
+                }
+
+                img {
+                    max-width: 300px;
+                    max-height: 180px;
+                    border-radius: 5px;
+                }
+
+                .details {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: none; // flex on hover .image
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .remove {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 30px;
+                    width: 30px;
+                    border-radius: 50%;
+                    background-color: #e40000;
+                    cursor: pointer;
+
+                    .fa {
+                        font-size: 20px;
+                        color: white;
+                    }
+                }
+            }
         }
     </style>
 @endsection
-
 @section('content')
     <div class="card">
-        <h5 class="card-header font-weight-bold ">  {{ trans('global.create') }} {{ trans('cruds.user.title_singular') }}</h5>
+        <h5 class="card-header font-weight-bold "> {{ trans('global.create') }} {{ trans('cruds.category.title_singular') }}
+        </h5>
         <div class="card-body mt-4">
-            <form method="POST" action="{{ route('admin.user.store') }}" enctype="multipart/form-data" id="myForm">
+            <form method="POST" action="{{ route('admin.category.store') }}" enctype="multipart/form-data" id="myForm">
                 @csrf
                 <div class="row">
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <div class="form-group">
-                            <label class="required" for="name">{{ trans('cruds.user.fields.name') }}</label>
-                            <input class="form-control {{ $errors->has('name') ? 'is-invalid' : ' ' }}" type="text"
-                                name="name" id="name" value="{{ old('name', '') }}" >
+                            <label class="required" for="parent_id">{{ trans('cruds.category.fields.parent_id') }}</label>
+                            <input class="form-control {{ $errors->has('parent_id') ? 'is-invalid' : ' ' }}" type="text"
+                                name="parent_id" id="parent_id" value="{{ old('parent_id', '') }}">
+                            <span class="parent_id_error"></span>
+                            @if ($errors->has('parent_id'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('parent_id') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label class="" for="name">{{ trans('cruds.category.fields.name') }}</label>
+                            <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="name"
+                                name="name" id="name" value="{{ old('name', '') }}">
                             <span class="name_error"></span>
-                            @if($errors->has('name'))
+                            @if ($errors->has('name'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('name') }}
                                 </div>
                             @endif
-                            <span class="help-block">{{ trans('cruds.user.fields.name_helper') }}</span>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label class="" for="email">{{ trans('cruds.user.fields.email') }}</label>
-                            <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email"
-                                name="email" id="email" value="{{ old('email', '') }}" >
-                            <span class="email_error"></span>
-                            @if ($errors->has('email'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('email') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.user.fields.email_helper') }}</span>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label class="required" for="password">{{ trans('cruds.user.fields.password') }}</label>
-                            <input class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" type="password"
-                                name="password" id="password">
-                            <span class="password_error"></span>
-                            @if ($errors->has('password'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('password') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.user.fields.password_helper') }}</span>
-                        </div>
-                    </div>
+                    <div class="col-xl-4 col-4 col-lg-4 col-md-6 col-sm-12">
+                        <div class="form-group drop-zone">
+                            {{-- <label class="required" for="file">{{ trans('cruds.category.fields.image') }}</label> --}}
+                            <div class="msg">Just drag and drop files here</div>
+                            <input type="file" class="receiver" />
 
+                        </div>
+                    </div>
+                    {{-- <div class="container">
+                        <div class="">
+                            <div class="msg">Just drag and drop files here</div>
+                            <input type="file" class="receiver" />
+                        </div>
+                    </div> --}}
 
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-flex">
                         <div class="form-group mt-2 mr-3">
@@ -82,64 +169,65 @@
         </div>
     </div>
 @endsection
-{{-- @section('scripts')
+@section('scripts')
     <script>
-        $('#save').on('click', function(e) {
-            e.preventDefault();
-            formValidation();
-        })
+        class DropZone {
+            constructor() {
+                this.dropZone = $('.drop-zone');
+                this.setupListeners();
+            }
 
-        var formValidation = () => {
-            let name = $('#name').val();
-            let email = $('#email').val();
-            let password = $('#password').val();
-            let roles = $('#roles').val();
-            let arr = [];
-            if (name == '') {
-                $('.name_error').html('{{ trans('cruds.user.fields.name') }} {{ trans('global.must_be_filled') }}');
-                arr.push('name');
-            } else {
-                $('.name_error').html('');
-                if (arr.includes("name")) {
-                    arr.splice(arr.indexOf('name'), 1);
+            setupListeners() {
+                this.dropZone.on('dragover dragenter', () => this.dropZone.addClass('is-dragover'));
+                this.dropZone.on('dragleave dragend drop', () => this.dropZone.removeClass('is-dragover'));
+                this.dropZone.on('change', (e) => this.onchange(e));
+                this.dropZone.on('click', '.remove', (e) => this.removeImage(e));
+            }
+
+            onchange(e) {
+                this.dropZone.addClass('has-images');
+                let $receiver = $(e.target);
+                $receiver.removeClass('receiver').addClass('has-image');
+
+                $('<input type="file" class="receiver">').prependTo(this.dropZone);
+
+                let file = $receiver[0].files[0];
+                if (file) {
+                    this.displayPreview(file);
                 }
             }
 
-            if (email == '') {
-                $('.email_error').html('{{ trans('cruds.user.fields.email') }} {{ trans('global.must_be_filled') }}');
-                arr.push('email');
-            } else {
-                $('.email_error').html('');
-                if (arr.includes("email")) {
-                    arr.splice(arr.indexOf('email'), 1);
-                }
+            // displayPreview(files) {
+            //     for (let file of files) {
+            //         let reader = new FileReader();
+            //         reader.onload = (e) => {
+            //             let url = e.currentTarget.result;
+            //             this.template(url).appendTo(this.dropZone);
+            //         };
+            //         reader.readAsDataURL(file);
+            //     }
+            // }
+
+            displayPreview(file) {
+                let fileName = file.name;
+                let $preview = this.dropZone.find('.preview').remove();
+                $preview.empty();
+                this.template(fileName).appendTo(this.dropZone);
             }
 
-            if (password == '') {
-                $('.password_error').html(
-                    '{{ trans('cruds.user.fields.password') }} {{ trans('global.must_be_filled') }}');
-                arr.push('password');
-            } else {
-                $('.password_error').html('');
-                if (arr.includes("password")) {
-                    arr.splice(arr.indexOf('password'), 1);
-                }
+            template(fileName) {
+                return $("<div class='preview'><div class='image'><img src='" + fileName +
+                    "'></div><div class='details'><div class='remove'><span class='fa fa-trash'></span></div></div></div>"
+                );
             }
 
-            if (roles == '') {
-                $('.role_error').html(
-                    'Role must be filled');
-                arr.push('role');
-            } else {
-                $('.role_error').html('');
-                if (arr.includes("role")) {
-                    arr.splice(arr.indexOf('role'), 1);
-                }
-            }
-
-            if (arr.length == 0) {
-                document.getElementById("myForm").submit();
+            removeImage(e) {
+                $(e.target).closest('.preview').remove();
             }
         }
+
+        $(document).ready(function() {
+            new DropZone();
+        });
     </script>
-@endsection --}}
+@endsection
