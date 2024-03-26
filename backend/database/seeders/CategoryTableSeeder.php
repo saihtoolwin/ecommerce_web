@@ -13,19 +13,19 @@ class CategoryTableSeeder extends Seeder
         Category::create([
             'parent_id'=>null,
             'name' => 'Electronics',
-            'image' => 'electronics.jpg',
+            // 'image' => 'electronics.jpg',
         ]);
 
         Category::create([
             'parent_id'=>null,
             'name' => 'Clothing',
-            'image' => 'clothing.jpg',
+            // 'image' => 'clothing.jpg',
         ]);
 
         Category::create([
             'parent_id'=>null,
             'name' => 'Home and Kitchen',
-            'image' => 'home_and_kitchen.jpg',
+            // 'image' => 'home_and_kitchen.jpg',
         ]);
     }
 }

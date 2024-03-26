@@ -33,9 +33,12 @@ class CategoryController extends Controller
     {
         // dd($request->all());
         $category=$this->categories->create($request->all());
-        if($request->image)
-        {
-            dd($request->image);
+        if ($request->hasFile('image')) {
+            dd("not have");
+        }else{
+            
+            $mediaItem = $category->addMedia($request->file('image'))
+                                  ->toMediaCollection('images');
         }
         return redirect()->route('admin.category.index')->with('message','Category Created Successfully');
     }
