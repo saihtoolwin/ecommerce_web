@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    use MediaUploadingTrait;
     protected $categories;
     public function __construct(Category $category){
         $this->categories= $category;
@@ -29,8 +31,13 @@ class CategoryController extends Controller
    
     public function store(StoreCategoryRequest $request)
     {
+        // dd($request->all());
         $category=$this->categories->create($request->all());
-        return redirect()->route('admin.category.index')->with('message','category Created Successfully');
+        if($request->image)
+        {
+            dd($request->image);
+        }
+        return redirect()->route('admin.category.index')->with('message','Category Created Successfully');
     }
 
    
@@ -64,5 +71,18 @@ class CategoryController extends Controller
         $category->delete();
         return redirect()->route('admin.category.index')->with('message','category Deleted successfully');
     }
+
+    // public function store(Request $request)
+    // {
+    //     // abort_if(Gate::denies("product_measurement_create"), Response::HTTP_FORBIDDEN, "403 Forbidden");
+
+    //     $productMeasurements= $this->productMeasurements->create($request->all());
+    //     if ($request->input('photo', false)) {
+    //         $productMeasurements->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+    //         // $productMeasurements->addMedia(public_path(basename($request->input('photo'))))->toMediaCollection('photo');
+    //     }
+        
+    //     return redirect()->route('admin.product-measurements.index')->with('message', 'Product Measurement created successfully!');
+    // }
 }
 

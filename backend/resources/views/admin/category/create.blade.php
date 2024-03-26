@@ -1,105 +1,26 @@
 @extends('layouts.admin')
 @section('styles')
     <style>
-        .drop-zone {
-            // layout.css Style
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            height: 200px;
-            border-width: 2px;
-            margin-bottom: 20px;
+        .wrapper {
+            background: #39E2B6;
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 9999;
+            text-align: center;
+            left: 0;
+            font-size: 100px;
+            font-family: calibri;
+            color: white;
+            line-height: 100vh;
+        }
 
-            // Style
-            color: #646C7F;
-            border-style: dashed;
-            border-color: #0087F7;
+        .dropzone {
+            width: 100%;
+            margin: 1%;
+            border: 2px dashed #3498db !important;
             border-radius: 5px;
-            /* line-height: 200px; */
-            cursor: pointer;
-
-            &.is-dragover {
-                color: #999;
-                border-style: solid;
-            }
-
-            &.has-images {
-                justify-content: flex-start;
-
-                .msg {
-                    display: none;
-                }
-            }
-
-
-            input.has-image {
-                opacity: 1;
-                width: 0px;
-                heigth: 0px;
-            }
-
-            input.receiver {
-                /* position: absolute; */
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                opacity: 0;
-                background-color: red;
-                cursor: pointer;
-            }
-
-            .preview {
-                display: flex;
-                align-items: center;
-                position: relative;
-                cursor: default;
-                margin: 0 5px;
-                height: 180px;
-                width: 300px !important;
-                border-radius: 5px;
-
-                &:hover {
-                    .details {
-                        display: flex;
-                    }
-                }
-
-                img {
-                    max-width: 300px;
-                    max-height: 180px;
-                    border-radius: 5px;
-                }
-
-                .details {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    display: none; // flex on hover .image
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                .remove {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    height: 30px;
-                    width: 30px;
-                    border-radius: 50%;
-                    background-color: #e40000;
-                    cursor: pointer;
-
-                    .fa {
-                        font-size: 20px;
-                        color: white;
-                    }
-                }
-            }
         }
     </style>
 @endsection
@@ -138,19 +59,10 @@
                         </div>
                     </div>
                     <div class="col-xl-4 col-4 col-lg-4 col-md-6 col-sm-12">
-                        <div class="form-group drop-zone">
-                            {{-- <label class="required" for="file">{{ trans('cruds.category.fields.image') }}</label> --}}
-                            <div class="msg">Just drag and drop files here</div>
-                            <input type="file" class="receiver" />
-
+                        <label for="image" class="form-label">Image</label>
+                        <div id="image-upload" class="dropzone">
                         </div>
                     </div>
-                    {{-- <div class="container">
-                        <div class="">
-                            <div class="msg">Just drag and drop files here</div>
-                            <input type="file" class="receiver" />
-                        </div>
-                    </div> --}}
 
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-flex">
                         <div class="form-group mt-2 mr-3">
@@ -171,63 +83,64 @@
 @endsection
 @section('scripts')
     <script>
-        class DropZone {
-            constructor() {
-                this.dropZone = $('.drop-zone');
-                this.setupListeners();
-            }
-
-            setupListeners() {
-                this.dropZone.on('dragover dragenter', () => this.dropZone.addClass('is-dragover'));
-                this.dropZone.on('dragleave dragend drop', () => this.dropZone.removeClass('is-dragover'));
-                this.dropZone.on('change', (e) => this.onchange(e));
-                this.dropZone.on('click', '.remove', (e) => this.removeImage(e));
-            }
-
-            onchange(e) {
-                this.dropZone.addClass('has-images');
-                let $receiver = $(e.target);
-                $receiver.removeClass('receiver').addClass('has-image');
-
-                $('<input type="file" class="receiver">').prependTo(this.dropZone);
-
-                let file = $receiver[0].files[0];
-                if (file) {
-                    this.displayPreview(file);
-                }
-            }
-
-            // displayPreview(files) {
-            //     for (let file of files) {
-            //         let reader = new FileReader();
-            //         reader.onload = (e) => {
-            //             let url = e.currentTarget.result;
-            //             this.template(url).appendTo(this.dropZone);
-            //         };
-            //         reader.readAsDataURL(file);
-            //     }
-            // }
-
-            displayPreview(file) {
-                let fileName = file.name;
-                let $preview = this.dropZone.find('.preview').remove();
-                $preview.empty();
-                this.template(fileName).appendTo(this.dropZone);
-            }
-
-            template(fileName) {
-                return $("<div class='preview'><div class='image'><img src='" + fileName +
-                    "'></div><div class='details'><div class='remove'><span class='fa fa-trash'></span></div></div></div>"
-                );
-            }
-
-            removeImage(e) {
-                $(e.target).closest('.preview').remove();
-            }
-        }
-
         $(document).ready(function() {
-            new DropZone();
+            // Initialize Dropzone
+            new Dropzone('#image-upload', {
+                url: '{{ route('admin.category.storeMedia') }}',
+                maxFilesize: 2, // MB
+                acceptedFiles: '.jpeg,.jpg,.png,.gif',
+                maxFiles: 1,
+                addRemoveLinks: true,
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                params: {
+                    size: 2,
+                    width: 4096,
+                    height: 4096
+                },
+                success: function(file, response) {
+                    console.log({
+                        file
+                    }, {
+                        response
+                    });
+                    $('form').find('input[name="image"]').remove();
+                    $('form').append('<input type="hidden" name="image" value="' + response.name +
+                    '">');
+                },
+                removedfile: function(file) {
+                    
+                    $('form').find('input[name="image"]').remove();
+                    
+                    file.previewElement.remove();
+                    
+                    this.options.maxFiles = this.options.maxFiles + 1;
+                },
+                init: function() {
+                    // If there's an existing image, initialize Dropzone with it
+                    @if (isset($productCategory) && $productCategory->image)
+                        var file = {!! json_encode($productCategory->image) !!};
+                        this.options.addedfile.call(this, file);
+                        this.options.thumbnail.call(this, file, file.preview ?? file.preview_url);
+                        file.previewElement.classList.add('dz-complete');
+                        $('form').append('<input type="hidden" name="image" value="' + file.file_name +
+                            '">');
+                        this.options.maxFiles = this.options.maxFiles - 1;
+                    @endif
+                },
+                error: function(file, response) {
+                    var message = ($.type(response) === 'string') ? response : response.errors.file;
+                    file.previewElement.classList.add('dz-error');
+                    _ref = file.previewElement.querySelectorAll('[data-dz-errormessage]');
+                    _results = [];
+                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                        node = _ref[_i];
+                        _results.push(node.textContent = message);
+                    }
+                    return _results;
+                }
+            });
         });
     </script>
 @endsection
