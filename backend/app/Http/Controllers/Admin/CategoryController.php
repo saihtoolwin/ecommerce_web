@@ -8,7 +8,7 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 class CategoryController extends Controller
 {
     use MediaUploadingTrait;
@@ -33,12 +33,13 @@ class CategoryController extends Controller
     {
         // dd($request->all());
         $category=$this->categories->create($request->all());
-        if ($request->hasFile('image')) {
-            dd("not have");
+        
+    
+        if ($request->input('image',false)) {
+            $category->addMedia(storage_path('tmp/uploads/' . basename($request->input('image'))))->toMediaCollection('image');
+         
         }else{
-            
-            $mediaItem = $category->addMedia($request->file('image'))
-                                  ->toMediaCollection('images');
+            dd("Hello");
         }
         return redirect()->route('admin.category.index')->with('message','Category Created Successfully');
     }
