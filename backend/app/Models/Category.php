@@ -26,7 +26,7 @@ class Category extends Model implements HasMedia
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
     }
 
-    public function getPhotoAttribute()
+    public function getImageAttribute()
     {
         $file = $this->getMedia('image')->last();
         if ($file) {

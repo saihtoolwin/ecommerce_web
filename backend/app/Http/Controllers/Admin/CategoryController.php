@@ -35,11 +35,15 @@ class CategoryController extends Controller
         $category=$this->categories->create($request->all());
         
     
-        if ($request->input('image',false)) {
-            $category->addMedia(storage_path('tmp/uploads/' . basename($request->input('image'))))->toMediaCollection('image');
-         
-        }else{
-            dd("Hello");
+        if ($request->input('image', false)) {
+            $filePath = $request->input('image');
+            if ($request->input('image',false)) {
+                $category->addMedia(storage_path('tmp/uploads/' .$filePath))->toMediaCollection('image');
+            } else {
+                dd("File does not exist at path: " . $filePath);
+            }
+        } else {
+            dd("No image input provided");
         }
         return redirect()->route('admin.category.index')->with('message','Category Created Successfully');
     }

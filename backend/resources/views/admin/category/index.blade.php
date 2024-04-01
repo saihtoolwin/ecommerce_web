@@ -2,7 +2,8 @@
 @section('content')
     <div class="card ">
         <div class="custom-header  d-flex justify-content-between px-3">
-            <p class="mt-3" style="font-size: 20px">{{ trans('cruds.category.title_singular') }} {{ trans('global.list') }}</p>
+            <p class="mt-3" style="font-size: 20px">{{ trans('cruds.category.title_singular') }} {{ trans('global.list') }}
+            </p>
             <div>
                 <a class="mt-3 btn btn-success" href="{{ route('admin.category.create') }}">
                     {{ trans('global.add') }} {{ trans('cruds.category.title_singular') }}
@@ -48,14 +49,12 @@
                                     {{ $category->name ?? '' }}
                                 </td>
                                 <td>
-                                    {{-- {{dd($category->image)}} --}}
-                                    
                                     @if ($category->image)
-                                    <img src="{{ $category->image->getUrl('preview') }}" alt="{{ $category->name }}" style="max-width: 100px;">
+                                        <img src="{{ $category->image->getUrl('preview') }}" alt="{{ $category->name }}"
+                                            style="max-width: 100px;">
                                     @else
                                         Hello
                                     @endif
-                                    
                                 </td>
                                 <td>
                                     <a class="p-0 glow text-white btn btn-primary"
