@@ -48,10 +48,14 @@
                                     {{ $category->name ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $category->email ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $category->phone_no ?? '' }}
+                                    {{-- {{dd($category->image)}} --}}
+                                    
+                                    @if ($category->image)
+                                    <img src="{{ $category->image->getUrl('preview') }}" alt="{{ $category->name }}" style="max-width: 100px;">
+                                    @else
+                                        Hello
+                                    @endif
+                                    
                                 </td>
                                 <td>
                                     <a class="p-0 glow text-white btn btn-primary"
