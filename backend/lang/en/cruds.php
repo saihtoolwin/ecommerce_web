@@ -47,10 +47,30 @@ return [
         'title_singular' => 'Category Title',
         'fields'    =>[
             'no'    => 'No',
+            'id'=>'ID',
             'parent_id'=>'Parent Category Name',
             'name' => 'Name',
             'image' => 'Image'
         ],
     ],
+    'product'=>[
+        'title' => 'Product',
+        'title_singular' => 'Product Title',
+        'fields' => [
+            'no' => 'No',
+            'id' => 'ID',
+            'name' => 'Name',
+            'description' => 'Description',
+            'price' => 'Price',
+            'qty' => 'Quantity',
+            'discount' => 'Discount',
+            'category_id' => 'Category',
+            'rating_id' => 'Rating',
+            'image' => 'Image',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At'
+        ],
+    ],
+    
 
 ];

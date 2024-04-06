@@ -4,13 +4,13 @@
         <div class="custom-header  d-flex justify-content-between px-3">
 
 
-            <p class="mt-3" style="font-size: 20px">{{ trans('cruds.user.title_singular') }} {{ trans('global.list') }}</p>
+            <p class="mt-3" style="font-size: 20px">{{ trans('cruds.product.title_singular') }} {{ trans('global.list') }}</p>
 
 
 
             <div>
-                <a class="mt-3 btn btn-success" href="{{ route('admin.user.create') }}">
-                    {{ trans('global.add') }} {{ trans('cruds.user.title_singular') }}
+                <a class="mt-3 btn btn-success" href="{{ route('admin.product.create') }}">
+                    {{ trans('global.add') }} {{ trans('cruds.product.title_singular') }}
                 </a>
             </div>
 
@@ -19,18 +19,33 @@
 
         <div class="card-body text-center">
             <div class="table-responsive">
-                <table class=" table table-bordered table-striped table-hover datatable datatable-User">
+                <table class=" table table-bordered table-striped table-hover datatable datatable-product">
                     <thead>
                         <tr>
                             <th>
-                                {{ trans('cruds.user.fields.name') }}
+                                {{ trans('cruds.product.fields.no') }}
                             </th>
                             <th>
-                                {{ trans('cruds.user.fields.email') }}
+                                {{ trans('cruds.product.fields.name') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.product.fields.price') }}
                             </th>
 
                             <th>
-                                {{ trans('cruds.user.fields.phone_no') }}
+                                {{ trans('cruds.product.fields.qty') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.product.fields.discount') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.product.fields.category_id') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.product.fields.rating_id') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.product.fields.description') }}
                             </th>
                             <th>
                                 {{ trans('global.actions') }}
@@ -38,32 +53,47 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $key => $user)
-                            <tr data-entry-id="{{ $user->id }}">
+                        @foreach ($products as $key => $product)
+                            <tr data-entry-id="{{ $product->id }}">
                                 <td>
-                                    {{ $user->name ?? '' }}
+                                    {{ $loop->iteration ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $user->email ?? '' }}
+                                    {{ $product->name ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $user->phone_no ?? '' }}
+                                    {{ $product->price ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $product->qty ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $product->discount ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $product->category_id ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $product->rating_id ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $product->description ?? '' }}
                                 </td>
                                 <td>
                                     <a class="p-0 glow text-white btn btn-primary"
                                         style="width: 60px;display: inline-block;line-height: 36px;color:grey;"
-                                        title="view" href="{{ route('admin.user.show', $user->id) }}">
+                                        title="view" href="{{ route('admin.product.show', $product->id) }}">
                                         Show
                                     </a>
 
                                     <a class="p-0 glow text-white btn btn-success"
                                         style="width: 60px;display: inline-block;line-height: 36px;color:grey;"
-                                        title="edit" href="{{ route('admin.user.edit', $user->id) }}">
+                                        title="edit" href="{{ route('admin.product.edit', $product->id) }}">
                                         Edit
                                     </a>
 
-                                    <form id="orderDelete-{{ $user->id }}"
-                                        action="{{ route('admin.user.destroy', $user->id) }}" method="POST"
+                                    <form id="orderDelete-{{ $product->id }}"
+                                        action="{{ route('admin.product.destroy', $product->id) }}" method="POST"
                                         style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -83,7 +113,7 @@
                     </tbody>
                 </table>
                 <div class="mt-3" style="float: right;">
-                    {{-- {{ $users->links() }} --}}
+                    {{-- {{ $products->links() }} --}}
                 </div>
             </div>
         </div>
@@ -94,11 +124,11 @@
     <script>
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-            @can('user_delete')
+            @can('product_delete')
                 let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.users.massDestroy') }}",
+                    url: "{{ route('admin.products.massDestroy') }}",
                     className: 'btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -143,7 +173,7 @@
                 bPaginate: false,
                 info: false,
             });
-            let table = $('.datatable-User:not(.ajaxTable)').DataTable({
+            let table = $('.datatable-product:not(.ajaxTable)').DataTable({
                 buttons: dtButtons
             })
             $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {

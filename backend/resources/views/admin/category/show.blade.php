@@ -3,58 +3,53 @@
 
 <div class="card">
     {{-- <div class="card-header mb-5">
-        {{ trans('global.show') }} {{ trans('cruds.user.title') }}
+        {{ trans('global.show') }} {{ trans('cruds.category.title') }}
     </div> --}}
     <h6 class="font-weight-bold card-header mb-5">
-        {{ trans('global.show') }} {{ trans('cruds.user.title') }}
+        {{ trans('global.show') }} {{ trans('cruds.category.title') }}
     </h6>
 
     <div class="card-body">
         <div class="form-group">
-            {{-- <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.users.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div> --}}
             <table class="table table-bordered table-striped">
                 <tbody>
                     <tr>
                         <th>
-                            {{ trans('cruds.user.fields.id') }}
+                            {{ trans('cruds.category.fields.id') }}
                         </th>
                         <td>
-                            {{ $user->id }}
+                            {{ $category->id }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.user.fields.name') }}
+                            {{ trans('cruds.category.fields.name') }}
                         </th>
                         <td>
-                            {{ $user->name }}
+                            {{ $category->name }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.user.fields.email') }}
+                            {{ trans('cruds.category.fields.parent_id') }}
                         </th>
                         <td>
-                            {{ $user->email }}
+                            {{ $category->parent_id }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.user.fields.email_verified_at') }}
+                            {{ trans('cruds.category.fields.image') }}
                         </th>
                         <td>
-                            {{ $user->email_verified_at }}
+                            {{ $category->image }}
                         </td>
                     </tr>
                     
                 </tbody>
             </table>
             <div class="form-group">
-                <a class="btn btn-secondary mt-3" href="{{ route('admin.user.index') }}">
+                <a class="btn btn-secondary mt-3" href="{{ route('admin.category.index') }}">
                     {{ trans('global.back_to_list') }}
                 </a>
             </div>
@@ -75,7 +70,7 @@
     </ul>
     <div class="tab-content">
         <div class="tab-pane" role="tabpanel" id="service_person_service_assigns">
-            @includeIf('admin.users.relationships.servicePersonServiceAssigns', ['serviceAssigns' => $user->servicePersonServiceAssigns])
+            @includeIf('admin.categorys.relationships.servicePersonServiceAssigns', ['serviceAssigns' => $category->servicePersonServiceAssigns])
         </div>
     </div>
 </div> --}}

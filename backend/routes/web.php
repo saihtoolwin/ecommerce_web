@@ -24,6 +24,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
     // Category
     Route::resource('/category','CategoryController');
 
+    // Product
+    Route::resource('/product','ProductController');
+
     Route::post('/category/media', 'CategoryController@storeMedia')->name('category.storeMedia');
 
 });

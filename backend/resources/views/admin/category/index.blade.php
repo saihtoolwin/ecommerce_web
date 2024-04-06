@@ -9,13 +9,11 @@
                     {{ trans('global.add') }} {{ trans('cruds.category.title_singular') }}
                 </a>
             </div>
-
-
         </div>
 
         <div class="card-body text-center">
             <div class="table-responsive">
-                <table class=" table table-bordered table-striped table-hover datatable datatable-category">
+                <table  id="dataTable" style="width:100%" class="display table table-bordered table-striped table-hover ">
                     <thead>
                         <tr>
                             <th>

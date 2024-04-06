@@ -3,44 +3,78 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\MediaUploadingTrait;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    use MediaUploadingTrait;
+    protected $products;
+    public function __construct(Product $product){
+        $this->products= $product;
+    }
     public function index()
     {
-        //
+        $products=$this->products->all();
+        return view('admin.product.index',compact(['products']));
     }
 
+    
     public function create()
     {
-        //
+        return view('admin.product.create');
     }
 
-
-    public function store(Request $request)
+   
+    public function store(StoreProductRequest $request)
     {
-        //
+        // dd($request->all());
+        $product=$this->products->create($request->all());
+        
+    
+        if ($request->input('image', false)) {
+            $filePath = $request->input('image');
+            if ($request->input('image',false)) {
+                $product->addMedia(storage_path('tmp/uploads/' .$filePath))->toMediaCollection('image');
+            } else {
+                dd("File does not exist at path: " . $filePath);
+            }
+        }
+        return redirect()->route('admin.product.index')->with('message','product Created Successfully');
     }
 
+   
     public function show($id)
     {
-        //
+        $product=$this->products->findOrFail($id);
+        
+        return view('admin.product.show',compact(['product']));
     }
 
-
+    
     public function edit($id)
     {
-        //
+        $product=$this->products->findOrFail($id);
+        return view('admin.product.edit',compact(['products','users','product']));
     }
 
-    public function update(Request $request, $id)
+   
+    public function update(UpdateProductRequest $request, $id)
     {
-        //
+        $product = $this->products->findOrFail($id);
+       $product->update($request->all());
+       return redirect()->route('admin.product.index')->with('message',' product Updated Successfully');
     }
 
+    
     public function destroy($id)
     {
-        //
+        $product=$this->products->findOrFail($id);
+        
+        $product->delete();
+        return redirect()->route('admin.product.index')->with('message','product Deleted successfully');
     }
 }

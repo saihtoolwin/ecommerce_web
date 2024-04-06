@@ -42,8 +42,6 @@ class CategoryController extends Controller
             } else {
                 dd("File does not exist at path: " . $filePath);
             }
-        } else {
-            dd("No image input provided");
         }
         return redirect()->route('admin.category.index')->with('message','Category Created Successfully');
     }
@@ -79,18 +77,5 @@ class CategoryController extends Controller
         $category->delete();
         return redirect()->route('admin.category.index')->with('message','category Deleted successfully');
     }
-
-    // public function store(Request $request)
-    // {
-    //     // abort_if(Gate::denies("product_measurement_create"), Response::HTTP_FORBIDDEN, "403 Forbidden");
-
-    //     $productMeasurements= $this->productMeasurements->create($request->all());
-    //     if ($request->input('photo', false)) {
-    //         $productMeasurements->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
-    //         // $productMeasurements->addMedia(public_path(basename($request->input('photo'))))->toMediaCollection('photo');
-    //     }
-        
-    //     return redirect()->route('admin.product-measurements.index')->with('message', 'Product Measurement created successfully!');
-    // }
 }
 
