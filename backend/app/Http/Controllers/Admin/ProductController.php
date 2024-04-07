@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -13,8 +14,10 @@ class ProductController extends Controller
 {
     use MediaUploadingTrait;
     protected $products;
-    public function __construct(Product $product){
+    protected $categories;
+    public function __construct(Product $product,Category $category){
         $this->products= $product;
+        $this->categories=$category;
     }
     public function index()
     {
@@ -25,7 +28,8 @@ class ProductController extends Controller
     
     public function create()
     {
-        return view('admin.product.create');
+        $categories=$this->categories->all();
+        return view('admin.product.create',compact('categories'));
     }
 
    
@@ -58,7 +62,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product=$this->products->findOrFail($id);
-        return view('admin.product.edit',compact(['products','users','product']));
+        return view('admin.product.edit',compact(['product']));
     }
 
    

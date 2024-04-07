@@ -15,51 +15,104 @@
                 @method('PUT')
                 @csrf
                 <div class="row">
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
                         <div class="form-group">
-                            <label class="required" for="name">{{ trans('cruds.user.fields.name') }}</label>
-                            <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text"
-                                name="name" id="name" value="{{ old('name', $user->name) }}" >
+                            <label class="required" for="name">{{ trans('cruds.product.fields.name') }}</label>
+                            <input class="form-control {{ $errors->has('name') ? 'is-invalid' : ' ' }}" type="text"
+                                name="name" id="name" value="{{ old('name',$product->name) }}" >
                             <span class="name_error"></span>
-                            @if ($errors->has('name'))
+                            @if($errors->has('name'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('name') }}
                                 </div>
                             @endif
-                            <span class="help-block">{{ trans('cruds.user.fields.name_helper') }}</span>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
                         <div class="form-group">
-                            <label class="required" for="email">{{ trans('cruds.user.fields.email') }}</label>
-                            <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email"
-                                name="email" id="email" value="{{ old('email', $user->email) }}" >
-                            <span class="email_error"></span>
-                            @if ($errors->has('email'))
+                            <label class="" for="price">{{ trans('cruds.product.fields.price') }}</label>
+                            <input class="form-control {{ $errors->has('price') ? 'is-invalid' : '' }}" type="number"
+                                name="price" id="price" value="{{ old('price',$product->name) }}" >
+                            <span class="price_error"></span>
+                            @if ($errors->has('price'))
                                 <div class="invalid-feedback">
-                                    {{ $errors->first('email') }}
+                                    {{ $errors->first('price') }}
                                 </div>
                             @endif
-                            <span class="help-block">{{ trans('cruds.user.fields.email_helper') }}</span>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
                         <div class="form-group">
-                            <label class="required" for="password">{{ trans('cruds.user.fields.password') }}</label>
-                            <input class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" type="password"
-                                name="password" id="password" value="{{ old('password', '') }}" >
-                            <span class="password_error"></span>
-                            @if ($errors->has('password'))
+                            <label class="required" for="qty">{{ trans('cruds.product.fields.qty') }}</label>
+                            <input class="form-control {{ $errors->has('qty') ? 'is-invalid' : '' }}" value="{{old('qty',$product->qty)}}" type="number"
+                                name="qty" id="qty">
+                            <span class="qty_error"></span>
+                            @if ($errors->has('qty'))
                                 <div class="invalid-feedback">
-                                    {{ $errors->first('password') }}
+                                    {{ $errors->first('qty') }}
                                 </div>
                             @endif
-                            <span class="help-block">{{ trans('cruds.user.fields.password_helper') }}</span>
                         </div>
                     </div>
-                    
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-flex">
-                        <div class="form-group mr-3 mt-2">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
+                        <div class="form-group">
+                            <label class="required" for="discount">{{ trans('cruds.product.fields.discount') }}</label>
+                            <input class="form-control {{ $errors->has('discount') ? 'is-invalid' : '' }}"  value="{{old('discount',$product->discount)}}" type="number"
+                                name="discount" id="discount">
+                            <span class="discount_error"></span>
+                            @if ($errors->has('discount'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('discount') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
+                        <div class="form-group">
+                            <label class="required" for="category_id">{{ trans('cruds.product.fields.category_id') }}</label>
+                            <select name="category_id" id="" class="form-select">
+                                <option value="">Please Select Category</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{$category->id}}">{{$category->name}}</option>
+                                @endforeach
+                            </select>
+                            <span class="category_id_error"></span>
+                            @if ($errors->has('category_id'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('category_id') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-3">
+                        <div class="form-group">
+                            <label class="required" for="image">{{ trans('cruds.product.fields.image') }}</label>
+                                <div id="image-upload" class="dropzone">
+                                </div>
+                            <span class="image_error"></span>
+                            @if ($errors->has('image'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('image') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-3">
+                        <div class="form-group">
+                            <label class="required" for="description">{{ trans('cruds.product.fields.description') }}</label>
+                           <textarea name="description" class="form-control"></textarea>
+                            <span class="description_error"></span>
+                            @if ($errors->has('description'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('description') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-flex mt-3">
+                        <div class="form-group mt-2 mr-3">
                             <button class="btn btn-success" type="submit" id="save">
                                 {{ trans('global.save') }}
                             </button>
