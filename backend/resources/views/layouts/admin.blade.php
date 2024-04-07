@@ -36,12 +36,15 @@
     <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
 
 
+    {{-- DataTable --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
     <!-- Template Stylesheet -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <style>
-       .is-invalid{
-        border: solid red !important;
-       }
+        .is-invalid {
+            border: solid red !important;
+        }
     </style>
     @yield('styles')
 </head>
@@ -217,8 +220,9 @@
                                 <i class="fa fa-exclamation-circle me-2"></i>
                                 <strong>{{ session('message') }}</strong>
 
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    {{-- <span aria-hidden="true">&times;</span> --}}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                                {{-- <span aria-hidden="true">&times;</span> --}}
                                 {{-- </button> --}}
 
                                 {{-- <div class="alert alert-primary alert-dismissible fade show" role="alert">
@@ -540,7 +544,11 @@
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
-
+    {{-- DataTable --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -556,12 +564,20 @@
     {{-- <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script> --}}
 
     {{-- kendo --}}
-    <script src="{{asset('js/kendo.all.min.js')}}"></script>
+    <script src="{{ asset('js/kendo.all.min.js') }}"></script>
 
     <!-- Template Javascript -->
     <script src="{{ asset('js/main.js') }}"></script>
 
+<script>
+    	
+new DataTable('#dataTable');
+</script>
+
+
     @yield('scripts')
+
+
 </body>
 
 </html>
