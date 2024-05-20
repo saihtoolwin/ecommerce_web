@@ -10,7 +10,7 @@
         </div> --}}
 
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.user.update', [$user->id]) }}" enctype="multipart/form-data"
+            <form method="POST" action="{{ route('admin.product.update', [$product->id]) }}" enctype="multipart/form-data"
                 id="myForm">
                 @method('PUT')
                 @csrf
@@ -32,7 +32,7 @@
                         <div class="form-group">
                             <label class="" for="price">{{ trans('cruds.product.fields.price') }}</label>
                             <input class="form-control {{ $errors->has('price') ? 'is-invalid' : '' }}" type="number"
-                                name="price" id="price" value="{{ old('price',$product->name) }}" >
+                                name="price" id="price" value="{{ old('price',$product->price) }}" >
                             <span class="price_error"></span>
                             @if ($errors->has('price'))
                                 <div class="invalid-feedback">
@@ -73,7 +73,9 @@
                             <select name="category_id" id="" class="form-select">
                                 <option value="">Please Select Category</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{$category->id}}">{{$category->name}}</option>
+                                    <option value="{{$category->id}}" @if ($category->id == $product->category_id )
+                                        selected
+                                    @endif>{{$category->name}}</option>
                                 @endforeach
                             </select>
                             <span class="category_id_error"></span>
@@ -87,7 +89,7 @@
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-3">
                         <div class="form-group">
                             <label class="required" for="image">{{ trans('cruds.product.fields.image') }}</label>
-                                <div id="image-upload" class="dropzone">
+                                <div id="photoDropzone" class="dropzone">
                                 </div>
                             <span class="image_error"></span>
                             @if ($errors->has('image'))
@@ -100,7 +102,7 @@
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-3">
                         <div class="form-group">
                             <label class="required" for="description">{{ trans('cruds.product.fields.description') }}</label>
-                           <textarea name="description" class="form-control"></textarea>
+                           <textarea name="description" class="form-control">{{$product->description}}</textarea>
                             <span class="description_error"></span>
                             @if ($errors->has('description'))
                                 <div class="invalid-feedback">
@@ -128,52 +130,112 @@
         </div>
     </div>
 @endsection
-{{-- @section('scripts')
+@section('scripts')
+    {{-- DropZone for image  --}}
     <script>
-        $('#save').on('click', function(e) {
-            e.preventDefault();
-            formValidation();
-        })
+        var product = {!! json_encode($product) !!};
+        var maxFilesAlertShown = false;
+        let product_length = 0;
 
-        var formValidation = () => {
-            let name = $('#name').val();
-            let email = $('#email').val();
-            let password = $('#password').val();
-            let role = $('#roles').find(':selected').val();
-            let arr = [];
-            if (name == '') {
-                $('.name_error').html('Name must be filled');
-                arr.push('name');
-            } else {
-                $('.name_error').html('');
-                if (arr.includes("name")) {
-                    arr.splice(arr.indexOf('name'), 1);
+        Dropzone.options.photoDropzone = {
+            url: '{{ route('admin.posts.storeMedia') }}',
+            maxFilesize: 5, // MB
+            acceptedFiles: '.jpeg,.jpg,.png,.gif',
+            maxFiles: 5,
+            addRemoveLinks: true,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            params: {
+                size: 2,
+                width: 4096,
+                height: 4096
+            },
+            success: function(file, response) {
+                product_length += this.files.length;
+                console.log("Current success media count: " + product_length);
+                if (product_length > 5) {
+                    var excessFilesCount = product_length - 5;
+                    for (var i = product_length - 1; i >= 0 && excessFilesCount > 0; i--) {
+                        this.removeFile(this.files[i]);
+                        excessFilesCount--;
+                    }
+                    if (!maxFilesAlertShown) {
+                        maxFilesAlertShown = true;
+                        alert('You have reached the maximum limit of 5 images.');
+                    }
+
+                } else {
+                    $('form').find('input[name="photo"]').remove()
+                    $('form').append('<input type="hidden" name="photo[]" value="' + response.name + '">')
+                    product_length++;
                 }
-            }
+                maxFilesAlertShown = false;
+            },
+            removedfile: function(file) {
 
-            if (email == '') {
-                $('.email_error').html('Email must be filled');
-                arr.push('email');
-            } else {
-                $('.email_error').html('');
-                if (arr.includes("email")) {
-                    arr.splice(arr.indexOf('email'), 1);
+                file.previewElement.remove()
+                if (file.status !== 'error') {
+                    product_length--;
+                    console.log("it is from remove" + product_length)
+                    var photoInputName = 'photo[]';
+                    var photoInputValue = file.file_name;
+                    $('form').find('input[name="' + photoInputName + '"][value="' + photoInputValue + '"]')
+                        .remove();
+                    this.options.maxFiles = this.options.maxFiles + 1;
                 }
-            }
 
-            if (password == '') {
-                $('.password_error').html('Password must be filled');
-                arr.push('password');
-            } else {
-                $('.password_error').html('');
-                if (arr.includes("password")) {
-                    arr.splice(arr.indexOf('password'), 1);
+            },
+            init: function() {
+                if (product.media && product.media.length > 0) {
+                    $('.dz-default.dz-message').addClass('d-none');
+                    product_length = product.media.length;
+                    console.log("This is from init" + product_length)
+                    product.media.forEach(media => {
+
+                        file = media;
+                        this.options.addedfile.call(this, file);
+                        this.options.thumbnail.call(this, file, file.preview || file.preview_url);
+                        $(file.previewElement).find('img').attr('src', file.url || file.preview || file
+                            .preview_url);
+                        file.previewElement.classList.add('dz-complete');
+                        $('form').append('<input type="hidden" name="photo[]" value="' + file.file_name +
+                            '">');
+                        this.options.maxFiles = this.options.maxFiles - 1;
+                    });
+                } else {
+                    $('.dz-default.dz-message').removeClass('d-none');
                 }
-            }
-
-            if (arr.length == 0) {
-                document.getElementById("myForm").submit();
-            }
+            },
+            error: function(file, response) {
+                console.log(this.files.length + ' ' + product.media.length)
+                if (this.files.length + product_length > 5) {
+                    console.log("this is from error" + this.files.length + product_length)
+                    if (!maxFilesAlertShown) {
+                        maxFilesAlertShown = true;
+                        alert('You have reached the maximum limit of 5 images.');
+                    }
+                    this.removeFile(file);
+                } else {
+                    console.log("it is ");
+                }
+                maxFilesAlertShown = false;
+                // if (this.files.length > 5) {
+                //     console.log("Hello");
+                //     if (!maxFilesAlertShown) {
+                //         maxFilesAlertShown = true;
+                //         alert('You have reached the maximum limit of 5 images.');
+                //     }
+                //     var excessFilesCount = this.files.length - 5;
+                //     for (var i = this.files.length - 1; i >= 0 && excessFilesCount > 0; i--) {
+                //         this.removeFile(this.files[i]);
+                //         excessFilesCount--;
+                //     }
+                // }else{
+                //     console.log("it is ")
+                // }
+                // maxFilesAlertShown = false;
+            },
         }
     </script>
-@endsection --}}
+@endsection
