@@ -29,6 +29,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
 
     Route::post('/category/media', 'CategoryController@storeMedia')->name('category.storeMedia');
 
+    // media
+    Route::post('posts/media','PostController@storeMedia')->name('posts.storeMedia');
+
 });
 
 // Route::post('image/upload/store', [MultiImageUploadController::class, 'fileStore']);

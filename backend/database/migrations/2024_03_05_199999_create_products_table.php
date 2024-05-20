@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('discount', 5, 2);
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('rating_id')->nullable();
-            $table->string('image'); 
+            // $table->string('image'); 
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
