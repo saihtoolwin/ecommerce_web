@@ -68,7 +68,16 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request, $id)
     {
+        // dd($request->all());
         $product = $this->products->findOrFail($id);
+        $photo=$request->image;
+        if($photo)
+        {
+            dd("Hello");
+            $product->addMedia(storage_path('tmp/uploads/' . basename($photo)))->toMediaCollection('photo');
+        }else{
+            $product->clearMediaCollection('image');
+        }
         $product->update($request->all());
         return redirect()->route('admin.product.index')->with('message', ' product Updated Successfully');
     }

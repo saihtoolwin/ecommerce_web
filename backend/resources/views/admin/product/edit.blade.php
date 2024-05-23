@@ -1,15 +1,18 @@
 @extends('layouts.admin')
 @section('styles')
-<style>
-    .dropzone .dz-preview .dz-image img {
-        object-fit: cover;
-        width: 100%; /* Ensure the image takes the full width of the container */
-        height: 100%; /* Ensure the image takes the full height of the container */
-    }
-    .dz-error-message{
-        display: none !important;
-    }
-</style>
+    <style>
+        .dropzone .dz-preview .dz-image img {
+            object-fit: cover;
+            width: 100%;
+            /* Ensure the image takes the full width of the container */
+            height: 100%;
+            /* Ensure the image takes the full height of the container */
+        }
+
+        .dz-error-message {
+            display: none !important;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="card">
@@ -146,13 +149,15 @@
     <script>
         var product = {!! json_encode($product) !!};
         var maxFilesAlertShown = false;
-        let product_length = 0;
-        console.log(product.media.length);
+        // let product_length = 0;
+        let total_image = 0;
+        console.log(total_image + " it is original length");
+
         $(document).ready(function() {
             // Initialize Dropzone
             new Dropzone('#image-upload', {
                 url: '{{ route('admin.category.storeMedia') }}',
-                maxFilesize: 2, // MB
+                maxFilesize: 1, // MB
                 acceptedFiles: '.jpeg,.jpg,.png,.gif',
                 maxFiles: 1,
                 addRemoveLinks: true,
@@ -160,64 +165,95 @@
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
                 },
                 params: {
-                    size: 2,
+                    size: 1,
                     width: 4096,
                     height: 4096
                 },
                 success: function(file, response) {
-                    console.log({
-                        file
-                    }, {
-                        response
-                    });
+                    console.log(this.files.length+"it work success!");
+                    total_image += this.files.length;
+                    console.log(total_image + "this is from success")
+                    if (total_image > 1) {
+                    total_image -= this.files.length;
+                        this.removeFile(file);
+                        if (!maxFilesAlertShown) {
+                            alert("You can only upload one image.");
+                            maxFilesAlertShown = true;
+                        }
+                        
+                        return;
+                    }
                     $('form').find('input[name="image"]').remove();
                     $('form').append('<input type="hidden" name="image" class="d-none" value="' +
                         response.name +
                         '">');
+                    this.options.maxFiles = 1;
                 },
                 removedfile: function(file) {
+                    console.log(this.files.length +"it is from remove");
+                    if(this.files.length == 0)
+                    {
+                        console.log("it is 0")
+                        total_image -= 1;
+                    }else{
+                        total_image -= this.files.length;
 
+                    }
+                    console.log(total_image );
+                    // console.log(total_image);
                     $('form').find('input[name="image"]').remove();
-
                     file.previewElement.remove();
-
                     this.options.maxFiles = this.options.maxFiles + 1;
+                    maxFilesAlertShown = false;
                 },
                 init: function() {
-                    // If there's an existing image, initialize Dropzone with it
-                    if (product && product.media.length > 0) {
-                        console.log("it is over")
+                    total_image =product.media.length;
+                    console.log(total_image + "it is from init");
+                    if (product && product.media.length > 1) {
+                        console.log("it is from init");
+
+                    } else {
                         product.media.forEach(productImg => {
                             file = productImg;
-                        this.options.addedfile.call(this, file);
-                        this.options.thumbnail.call(this, file, file.preview || file.preview_url);
-                        $(file.previewElement).find('img').attr('src', file.url || file.preview || file
-                            .preview_url);
-                        file.previewElement.classList.add('dz-complete');
-                        $('form').append('<input type="hidden"  name="image" value="' + file.file_name +
-                            '">');
-                        this.options.maxFiles = this.options.maxFiles - 1;
+                            this.options.addedfile.call(this, file);
+                            this.options.thumbnail.call(this, file, file.preview || file
+                                .preview_url);
+                            $(file.previewElement).find('img').attr('src', file.url || file
+                                .preview || file
+                                .preview_url);
+                            file.previewElement.classList.add('dz-complete');
+                            $('form').append('<input type="hidden"  name="image" value="' + file
+                                .file_name +
+                                '">');
+                            this.options.maxFiles = this.options.maxFiles - 1;
                         });
-                        // this.options.addedfile.call(this, file);
-                        // this.options.thumbnail.call(this, file, file.preview ?? file.preview_url);
-                        // file.previewElement.classList.add('dz-complete');
-                        // $('form').append('<input type="file" name="image" value="' + file.file_name +
-                        //     '">');
-                        // this.options.maxFiles = this.options.maxFiles - 1;
+                        $('.dz-message').addClass('d-none');
                     }
+
+                    
 
                 },
                 error: function(file, response) {
-                    var message = ($.type(response) === 'string') ? response : response.errors.file;
-                    file.previewElement.classList.add('dz-error');
-                    _ref = file.previewElement.querySelectorAll('[data-dz-errormessage]');
-                    _results = [];
-                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                        node = _ref[_i];
-                        _results.push(node.textContent = message);
+                    total_image += this.files.length;
+                    console.log(total_image + "this is from error")
+                    if (total_image > 1) {
+                        console.log(this.files.length+ 'pppp')
+                        total_image -=this.files.length;
+                        this.removeFile(file);
+                        console.log(total_image + "this is from error in side if")
+
+                        if (!maxFilesAlertShown) {
+                            alert("You can only upload one image.");
+
+                            maxFilesAlertShown = true;
+                        }
+                        return;
                     }
-                    return _results;
-                }
+                    file.previewElement.remove();
+
+                    this.options.maxFiles = this.options.maxFiles + 1;
+                    maxFilesAlertShown = false;
+                },
             });
         });
     </script>
