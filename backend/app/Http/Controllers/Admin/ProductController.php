@@ -73,8 +73,8 @@ class ProductController extends Controller
         $photo=$request->image;
         if($photo)
         {
-            dd("Hello");
-            $product->addMedia(storage_path('tmp/uploads/' . basename($photo)))->toMediaCollection('photo');
+            $product->clearMediaCollection('image');
+            $product->addMedia(storage_path('tmp/uploads/' . basename($photo)))->toMediaCollection('image');
         }else{
             $product->clearMediaCollection('image');
         }
