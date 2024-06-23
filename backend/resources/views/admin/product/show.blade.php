@@ -78,11 +78,9 @@
                                 {{ trans('cruds.product.fields.image') }}
                             </th>
                             <td>
-                                {{-- {{ $product->image->thumbnail }} --}}
                                 @if ($product->image)
-                                    <img src="{{ $product->image->getUrl('preview') }}" class="img-thumbnail"
-                                        alt="Product Image">
-                                @else
+                                <img src="{{ $product->image->getUrl('preview') }}" class="img-thumbnail" alt="Product Image">
+                            @else
                                     No image available
                                 @endif
                             </td>

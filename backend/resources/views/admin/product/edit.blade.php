@@ -1,17 +1,33 @@
 @extends('layouts.admin')
 @section('styles')
-    
+    <style>
+        .dropzone .dz-preview .dz-image img {
+            object-fit: cover;
+            width: 100%;
+            /* Ensure the image takes the full width of the container */
+            height: 100%;
+            /* Ensure the image takes the full height of the container */
+        }
+
+        .dz-error-message {
+            display: none !important;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="card">
-        <h5 class="card-header font-weight-bold mb-4"> {{ trans('global.edit') }} {{ trans('cruds.user.title_singular') }}</h5>
+        <h5 class="card-header font-weight-bold mb-4"> {{ trans('global.edit') }} {{ trans('cruds.user.title_singular') }}
+        </h5>
         {{-- <div class="card-header">
             {{ trans('global.edit') }} {{ trans('cruds.user.title_singular') }}
         </div> --}}
 
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.user.update', [$user->id]) }}" enctype="multipart/form-data"
-                id="myForm">
+            <form method="POST" action="{{ route('admin.product.update', [$product->id]) }}" enctype="multipart/form-data">
                 @method('PUT')
                 @csrf
                 <div class="row">
@@ -19,9 +35,9 @@
                         <div class="form-group">
                             <label class="required" for="name">{{ trans('cruds.product.fields.name') }}</label>
                             <input class="form-control {{ $errors->has('name') ? 'is-invalid' : ' ' }}" type="text"
-                                name="name" id="name" value="{{ old('name',$product->name) }}" >
+                                name="name" id="name" value="{{ old('name', $product->name) }}">
                             <span class="name_error"></span>
-                            @if($errors->has('name'))
+                            @if ($errors->has('name'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('name') }}
                                 </div>
@@ -32,7 +48,7 @@
                         <div class="form-group">
                             <label class="" for="price">{{ trans('cruds.product.fields.price') }}</label>
                             <input class="form-control {{ $errors->has('price') ? 'is-invalid' : '' }}" type="number"
-                                name="price" id="price" value="{{ old('price',$product->name) }}" >
+                                name="price" id="price" value="{{ old('price', $product->price) }}">
                             <span class="price_error"></span>
                             @if ($errors->has('price'))
                                 <div class="invalid-feedback">
@@ -44,8 +60,8 @@
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
                         <div class="form-group">
                             <label class="required" for="qty">{{ trans('cruds.product.fields.qty') }}</label>
-                            <input class="form-control {{ $errors->has('qty') ? 'is-invalid' : '' }}" value="{{old('qty',$product->qty)}}" type="number"
-                                name="qty" id="qty">
+                            <input class="form-control {{ $errors->has('qty') ? 'is-invalid' : '' }}"
+                                value="{{ old('qty', $product->qty) }}" type="number" name="qty" id="qty">
                             <span class="qty_error"></span>
                             @if ($errors->has('qty'))
                                 <div class="invalid-feedback">
@@ -57,8 +73,9 @@
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
                         <div class="form-group">
                             <label class="required" for="discount">{{ trans('cruds.product.fields.discount') }}</label>
-                            <input class="form-control {{ $errors->has('discount') ? 'is-invalid' : '' }}"  value="{{old('discount',$product->discount)}}" type="number"
-                                name="discount" id="discount">
+                            <input class="form-control {{ $errors->has('discount') ? 'is-invalid' : '' }}"
+                                value="{{ old('discount', $product->discount) }}" type="number" name="discount"
+                                id="discount">
                             <span class="discount_error"></span>
                             @if ($errors->has('discount'))
                                 <div class="invalid-feedback">
@@ -69,11 +86,13 @@
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
                         <div class="form-group">
-                            <label class="required" for="category_id">{{ trans('cruds.product.fields.category_id') }}</label>
-                            <select name="category_id" id="" class="form-select">
+                            <label class="required"
+                                for="category_id">{{ trans('cruds.product.fields.category_id') }}</label>
+                            <select name="category_id" id="category_id" class="form-select">
                                 <option value="">Please Select Category</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{$category->id}}">{{$category->name}}</option>
+                                    <option value="{{ $category->id }}" @if ($category->id == $product->category_id) selected @endif>
+                                        {{ $category->name }}</option>
                                 @endforeach
                             </select>
                             <span class="category_id_error"></span>
@@ -87,8 +106,8 @@
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-3">
                         <div class="form-group">
                             <label class="required" for="image">{{ trans('cruds.product.fields.image') }}</label>
-                                <div id="image-upload" class="dropzone">
-                                </div>
+                            <div id="image-upload" class="dropzone">
+                            </div>
                             <span class="image_error"></span>
                             @if ($errors->has('image'))
                                 <div class="invalid-feedback">
@@ -99,8 +118,9 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-3">
                         <div class="form-group">
-                            <label class="required" for="description">{{ trans('cruds.product.fields.description') }}</label>
-                           <textarea name="description" class="form-control"></textarea>
+                            <label class="required"
+                                for="description">{{ trans('cruds.product.fields.description') }}</label>
+                            <textarea name="description" class="form-control">{{ $product->description }}</textarea>
                             <span class="description_error"></span>
                             @if ($errors->has('description'))
                                 <div class="invalid-feedback">
@@ -109,7 +129,6 @@
                             @endif
                         </div>
                     </div>
-
 
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-flex mt-3">
                         <div class="form-group mt-2 mr-3">
@@ -128,52 +147,184 @@
         </div>
     </div>
 @endsection
-{{-- @section('scripts')
+@section('scripts')
+    {{-- DropZone for image  --}}
     <script>
-        $('#save').on('click', function(e) {
-            e.preventDefault();
-            formValidation();
-        })
+        var product = {!! json_encode($product) !!};
+        var maxFilesAlertShown = false;
+        let total_image = 0;
+        console.log(total_image + " it is original length");
+        $(document).ready(function() {
+            // Initialize Dropzone
+            new Dropzone('#image-upload', {
+                url: '{{ route('admin.category.storeMedia') }}',
+                maxFilesize: 2, // MB
+                acceptedFiles: '.jpeg,.jpg,.png,.gif',
+                maxFiles: 1,
+                addRemoveLinks: true,
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                params: {
+                    size: 2,
+                    width: 4096,
+                    height: 4096
+                },
+                success: function(file, response) {
+                    console.log("this is success" + total_image + " and " + this.files.length);
+                    total_image += this.files.length;
+                    if (total_image > 1) {
+                        file.previewElement.remove();
+                    } else {
+                        $('form').find('input[name="image"]').remove();
+                        $('form').append('<input type="hidden" name="image" class="d-none" value="' +
+                            response.name +
+                            '">');
+                    }
 
-        var formValidation = () => {
-            let name = $('#name').val();
-            let email = $('#email').val();
-            let password = $('#password').val();
-            let role = $('#roles').find(':selected').val();
-            let arr = [];
-            if (name == '') {
-                $('.name_error').html('Name must be filled');
-                arr.push('name');
-            } else {
-                $('.name_error').html('');
-                if (arr.includes("name")) {
-                    arr.splice(arr.indexOf('name'), 1);
+                },
+                removedfile: function(file) {
+                    $('form').find('input[name="image"]').remove();
+                    total_image--;
+                    console.log("Total images after removal: ", total_image);
+                    file.previewElement.remove();
+                    if (total_image == 0) {
+                        this.options.maxFiles = this.options.maxFiles + 1;
+                    }
+                },
+                init: function() {
+                    // If there's an existing image, initialize Dropzone with it
+                    total_image = product.media.length;
+                    console.log(total_image + 'this is init total image')
+                    if (product && product.media) {
+                        product.media.forEach(productImg => {
+                            var file = productImg;
+                            this.options.addedfile.call(this, file);
+                            this.options.thumbnail.call(this, file, file.preview ?? file
+                                .preview_url);
+                            file.previewElement.classList.add('dz-complete');
+                            $('form').append('<input type="file" name="image" value="' + file
+                                .file_name +
+                                '">');
+                            this.options.maxFiles = this.options.maxFiles - 1;
+                        })
+                    }
+                },
+                error: function(file, response) {
+                    console.log("it is error work")
+                    var message = ($.type(response) === 'string') ? response : response.errors.file;
+                    file.previewElement.classList.add('dz-error');
+                    _ref = file.previewElement.querySelectorAll('[data-dz-errormessage]');
+                    total_image += _ref.length;
+                    console.log(_ref.length + 'iiiii')
+                    _results = [];
+                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                        node = _ref[_i];
+                        _results.push(node.textContent = message);
+                    }
+                    return _results;
                 }
-            }
+            });
+        });
+        // $(document).ready(function() {
+        //     // Initialize Dropzone
+        //     new Dropzone('#image-upload', {
+        //         url: '{{ route('admin.category.storeMedia') }}',
+        //         maxFilesize: 1, // MB
+        //         acceptedFiles: '.jpeg,.jpg,.png,.gif',
+        //         maxFiles: 1,
+        //         addRemoveLinks: true,
+        //         headers: {
+        //             'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        //         },
+        //         params: {
+        //             size: 1,
+        //             width: 4096,
+        //             height: 4096
+        //         },
+        //         success: function(file, response) {
+        //             console.log(this.files.length+"it work success!");
+        //             total_image += this.files.length;
+        //             console.log(total_image + "this is from success")
+        //             if (total_image > 1) {
+        //             total_image -= this.files.length;
+        //                 this.removeFile(file);
+        //                 if (!maxFilesAlertShown) {
+        //                     alert("You can only upload one image.");
+        //                     maxFilesAlertShown = true;
+        //                 }
 
-            if (email == '') {
-                $('.email_error').html('Email must be filled');
-                arr.push('email');
-            } else {
-                $('.email_error').html('');
-                if (arr.includes("email")) {
-                    arr.splice(arr.indexOf('email'), 1);
-                }
-            }
+        //                 return;
+        //             }
+        //             $('form').find('input[name="image"]').remove();
+        //             $('form').append('<input type="hidden" name="image" class="d-none" value="' +
+        //                 response.name +
+        //                 '">');
+        //             this.options.maxFiles = 1;
+        //         },
+        //         removedfile: function(file) {
+        //             console.log(this.files.length +"it is from remove");
+        //             if(this.files.length == 0)
+        //             {
+        //                 console.log("it is 0")
+        //                 total_image -= 1;
+        //             }
+        //             console.log(total_image );
+        //             // console.log(total_image);
+        //             $('form').find('input[name="image"]').remove();
+        //             file.previewElement.remove();
+        //             this.options.maxFiles = this.options.maxFiles + 1;
+        //             maxFilesAlertShown = false;
+        //         },
+        //         init: function() {
+        //             total_image =product.media.length;
+        //             console.log(total_image + "it is from init");
+        //             if (product && product.media.length > 1) {
+        //                 console.log("it is from init");
 
-            if (password == '') {
-                $('.password_error').html('Password must be filled');
-                arr.push('password');
-            } else {
-                $('.password_error').html('');
-                if (arr.includes("password")) {
-                    arr.splice(arr.indexOf('password'), 1);
-                }
-            }
+        //             } else {
+        //                 product.media.forEach(productImg => {
+        //                     file = productImg;
+        //                     this.options.addedfile.call(this, file);
+        //                     this.options.thumbnail.call(this, file, file.preview || file
+        //                         .preview_url);
+        //                     $(file.previewElement).find('img').attr('src', file.url || file
+        //                         .preview || file
+        //                         .preview_url);
+        //                     file.previewElement.classList.add('dz-complete');
+        //                     $('form').append('<input type="hidden"  name="image" value="' + file
+        //                         .file_name +
+        //                         '">');
+        //                     this.options.maxFiles = this.options.maxFiles - 1;
+        //                 });
+        //                 $('.dz-message').addClass('d-none');
+        //             }
 
-            if (arr.length == 0) {
-                document.getElementById("myForm").submit();
-            }
-        }
+
+
+        //         },
+        //         error: function(file, response) {
+        //             total_image += this.files.length;
+        //             console.log(total_image + "this is from error")
+        //             if (total_image > 1) {
+        //                 console.log(this.files.length+ 'pppp')
+        //                 total_image -=this.files.length;
+        //                 this.removeFile(file);
+        //                 console.log(total_image + "this is from error in side if")
+
+        //                 if (!maxFilesAlertShown) {
+        //                     alert("You can only upload one image.");
+
+        //                     maxFilesAlertShown = true;
+        //                 }
+        //                 return;
+        //             }
+        //             file.previewElement.remove();
+
+        //             this.options.maxFiles = this.options.maxFiles + 1;
+        //             maxFilesAlertShown = false;
+        //         },
+        //     });
+        // });
     </script>
-@endsection --}}
+@endsection
