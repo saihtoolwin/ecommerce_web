@@ -79,6 +79,7 @@
                             </th>
                             <td>
                                 @if ($product->image)
+                                {{-- @dd($product->image) --}}
                                 <img src="{{ $product->image->getUrl('preview') }}" class="img-thumbnail" alt="Product Image">
                             @else
                                     No image available

@@ -18,7 +18,7 @@ class ProductTableSeeder extends Seeder
             'qty' => 100,
             'discount' => 5.00,
             'category_id' => 1,
-            'rating_id' =>null,
+            // 'rating_id' =>null,
             'image' => 'product1.jpg',
         ]);
 
@@ -29,7 +29,7 @@ class ProductTableSeeder extends Seeder
             'qty' => 50,
             'discount' => 0.00,
             'category_id' => 2,
-            'rating_id' =>null,
+            // 'rating_id' =>null,
             'image' => 'product2.jpg',
         ]);
 
@@ -40,7 +40,7 @@ class ProductTableSeeder extends Seeder
             'qty' => 75,
             'discount' => 8.00,
             'category_id' => 1,
-            'rating_id' =>null,
+            // 'rating_id' =>null,
             'image' => 'product3.jpg',
         ]);
     }

@@ -19,12 +19,12 @@ class Category extends Model implements HasMedia
         // 'image',
     ];
 
-    // public function registerMediaConversions(Media $media = null): void
-    // {
-    //     // $this->addMediaCollection('image');
-    //     $this->addMediaConversion('thumb')->fit('crop', 50, 50);
-    //     $this->addMediaConversion('preview')->fit('crop', 120, 120);
-    // }
+    public function registerMediaConversions(Media $media = null): void
+    {
+        // $this->addMediaCollection('image');
+        $this->addMediaConversion('thumb')->fit('crop', 50, 50);
+        $this->addMediaConversion('preview')->fit('crop', 120, 120);
+    }
 
     public function getImageAttribute()
     {

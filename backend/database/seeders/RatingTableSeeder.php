@@ -13,7 +13,7 @@ class RatingTableSeeder extends Seeder
     {
         Rating::create([
             'user_id' => 1,
-            // 'product_id' => 1,
+            'product_id' => 1,
             'rating_value' => 4,
             'review_text' => 'Good product!',
             'rating_date' => now(),
@@ -21,7 +21,7 @@ class RatingTableSeeder extends Seeder
 
         Rating::create([
             'user_id' => 2,
-            // 'product_id' => 2,
+            'product_id' => 2,
             'rating_value' => 5,
             'review_text' => 'It is bad.',
             'rating_date' => now(),
@@ -29,7 +29,7 @@ class RatingTableSeeder extends Seeder
 
         Rating::create([
             'user_id' => 3,
-            // 'product_id' => 3,
+            'product_id' => 3,
             'rating_value' => 3,
             'review_text' => 'Not bad.',
             'rating_date' => now(),

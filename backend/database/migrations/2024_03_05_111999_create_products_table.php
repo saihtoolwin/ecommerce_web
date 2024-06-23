@@ -16,12 +16,12 @@ return new class extends Migration
             $table->integer('qty');
             $table->decimal('discount', 5, 2);
             $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('rating_id')->nullable();
-            // $table->string('image'); 
+            // $table->unsignedBigInteger('rating_id')->nullable();
+            $table->string('image'); 
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreign('rating_id')->references('id')->on('ratings')->onDelete('cascade');
+            // $table->foreign('rating_id')->references('id')->on('ratings')->onDelete('cascade');
         });
     }
 

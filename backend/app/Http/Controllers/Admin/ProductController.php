@@ -42,9 +42,11 @@ class ProductController extends Controller
 
         if ($request->input('image', false)) {
             $filePath = $request->input('image');
-            $product->addMedia(storage_path('tmp/uploads/' . $filePath))->toMediaCollection('image');
+            $fullPath = storage_path('tmp/uploads/' . $filePath);
+            // dd($fullPath);
+            $product->addMedia($fullPath)->toMediaCollection('image');
         } else {
-            dd("File does not exist at path: " . $filePath);
+            dd("Image input is missing in the request.");
         }
         return redirect()->route('admin.product.index')->with('message', 'product Created Successfully');
     }
@@ -62,7 +64,7 @@ class ProductController extends Controller
     {
         $product = $this->products->with('media')->findOrFail($id);
         $categories = $this->categories->all();
-        return view('admin.product.edit', compact(['product','categories']));
+        return view('admin.product.edit', compact(['product', 'categories']));
     }
 
 
@@ -70,12 +72,11 @@ class ProductController extends Controller
     {
         // dd($request->all());
         $product = $this->products->findOrFail($id);
-        $photo=$request->image;
-        if($photo)
-        {
+        $photo = $request->image;
+        if ($photo) {
             $product->clearMediaCollection('image');
             $product->addMedia(storage_path('tmp/uploads/' . basename($photo)))->toMediaCollection('image');
-        }else{
+        } else {
             $product->clearMediaCollection('image');
         }
         $product->update($request->all());

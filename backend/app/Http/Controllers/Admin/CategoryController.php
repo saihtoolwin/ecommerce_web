@@ -36,6 +36,7 @@ class CategoryController extends Controller
         
     
         if ($request->input('image', false)) {
+            // dd('hit');
             $filePath = $request->input('image');
             if ($request->input('image',false)) {
                 $category->addMedia(storage_path('tmp/uploads/' .$filePath))->toMediaCollection('image');
