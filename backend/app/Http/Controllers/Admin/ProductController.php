@@ -48,7 +48,7 @@ class ProductController extends Controller
         } else {
             dd("Image input is missing in the request.");
         }
-        return redirect()->route('admin.product.index')->with('message', 'product Created Successfully');
+        return redirect()->route('admin.product.index')->with('message', 'Product Created Successfully');
     }
 
 
@@ -80,7 +80,7 @@ class ProductController extends Controller
             $product->clearMediaCollection('image');
         }
         $product->update($request->all());
-        return redirect()->route('admin.product.index')->with('message', ' product Updated Successfully');
+        return redirect()->route('admin.product.index')->with('message', ' Product Updated Successfully');
     }
 
 
@@ -89,6 +89,6 @@ class ProductController extends Controller
         $product = $this->products->findOrFail($id);
 
         $product->delete();
-        return redirect()->route('admin.product.index')->with('message', 'product Deleted successfully');
+        return redirect()->route('admin.product.index')->with('message', 'Product Deleted successfully');
     }
 }

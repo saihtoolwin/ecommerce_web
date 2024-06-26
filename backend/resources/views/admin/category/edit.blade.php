@@ -1,65 +1,71 @@
 @extends('layouts.admin')
 @section('styles')
-    
+    <style>
+        .wrapper {
+            background: #39E2B6;
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 9999;
+            text-align: center;
+            left: 0;
+            font-size: 100px;
+            font-family: calibri;
+            color: white;
+            line-height: 100vh;
+        }
+
+        .dropzone {
+            width: 100%;
+            margin: 1%;
+            border: 2px dashed #3498db !important;
+            border-radius: 5px;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="card">
-        <h5 class="card-header font-weight-bold mb-4"> {{ trans('global.edit') }} {{ trans('cruds.user.title_singular') }}</h5>
-        {{-- <div class="card-header">
-            {{ trans('global.edit') }} {{ trans('cruds.user.title_singular') }}
-        </div> --}}
-
-        <div class="card-body">
-            <form method="POST" action="{{ route('admin.user.update', [$user->id]) }}" enctype="multipart/form-data"
-                id="myForm">
-                @method('PUT')
+        <h5 class="card-header font-weight-bold "> {{ trans('global.create') }} {{ trans('cruds.category.title_singular') }}
+        </h5>
+        <div class="card-body mt-4">
+            <form method="POST" action="{{ route('admin.category.store') }}" enctype="multipart/form-data" id="myForm">
                 @csrf
                 <div class="row">
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <div class="form-group">
-                            <label class="required" for="name">{{ trans('cruds.user.fields.name') }}</label>
-                            <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text"
-                                name="name" id="name" value="{{ old('name', $user->name) }}" >
+                            <label class="required" for="parent_id">{{ trans('cruds.category.fields.parent_id') }}</label>
+                            <input class="form-control {{ $errors->has('parent_id') ? 'is-invalid' : ' ' }}" type="text"
+                                name="parent_id" id="parent_id" value="{{ old('parent_id',$category->parent_id) }}">
+                            <span class="parent_id_error"></span>
+                            @if ($errors->has('parent_id'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('parent_id') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label class="" for="name">{{ trans('cruds.category.fields.name') }}</label>
+                            <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="name"
+                                name="name" id="name" value="{{ old('name', $category->name) }}">
                             <span class="name_error"></span>
                             @if ($errors->has('name'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('name') }}
                                 </div>
                             @endif
-                            <span class="help-block">{{ trans('cruds.user.fields.name_helper') }}</span>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label class="required" for="email">{{ trans('cruds.user.fields.email') }}</label>
-                            <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email"
-                                name="email" id="email" value="{{ old('email', $user->email) }}" >
-                            <span class="email_error"></span>
-                            @if ($errors->has('email'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('email') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.user.fields.email_helper') }}</span>
+                    <div class="col-xl-4 col-4 col-lg-4 col-md-6 col-sm-12">
+                        <label for="image" class="form-label">Image</label>
+                        <div id="image-upload" class="dropzone">
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label class="required" for="password">{{ trans('cruds.user.fields.password') }}</label>
-                            <input class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" type="password"
-                                name="password" id="password" value="{{ old('password', '') }}" >
-                            <span class="password_error"></span>
-                            @if ($errors->has('password'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('password') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.user.fields.password_helper') }}</span>
-                        </div>
-                    </div>
-                    
+
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-flex">
-                        <div class="form-group mr-3 mt-2">
+                        <div class="form-group mt-2 mr-3">
                             <button class="btn btn-success" type="submit" id="save">
                                 {{ trans('global.save') }}
                             </button>
@@ -75,52 +81,66 @@
         </div>
     </div>
 @endsection
-{{-- @section('scripts')
+@section('scripts')
     <script>
-        $('#save').on('click', function(e) {
-            e.preventDefault();
-            formValidation();
-        })
-
-        var formValidation = () => {
-            let name = $('#name').val();
-            let email = $('#email').val();
-            let password = $('#password').val();
-            let role = $('#roles').find(':selected').val();
-            let arr = [];
-            if (name == '') {
-                $('.name_error').html('Name must be filled');
-                arr.push('name');
-            } else {
-                $('.name_error').html('');
-                if (arr.includes("name")) {
-                    arr.splice(arr.indexOf('name'), 1);
+        $(document).ready(function() {
+            // Initialize Dropzone
+            new Dropzone('#image-upload', {
+                url: '{{ route('admin.category.storeMedia') }}',
+                maxFilesize: 2, // MB
+                acceptedFiles: '.jpeg,.jpg,.png,.gif',
+                maxFiles: 1,
+                addRemoveLinks: true,
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                params: {
+                    size: 2,
+                    width: 4096,
+                    height: 4096
+                },
+                success: function(file, response) {
+                    console.log({
+                        file
+                    }, {
+                        response
+                    });
+                    $('form').find('input[name="image"]').remove();
+                    $('form').append('<input type="hidden" name="image" class="d-none" value="' + response.name +
+                    '">');
+                },
+                removedfile: function(file) {
+                    
+                    $('form').find('input[name="image"]').remove();
+                    
+                    file.previewElement.remove();
+                    
+                    this.options.maxFiles = this.options.maxFiles + 1;
+                },
+                init: function() {
+                    // If there's an existing image, initialize Dropzone with it
+                    @if (isset($category) && $category->image)
+                        var file = {!! json_encode($category->image) !!};
+                        this.options.addedfile.call(this, file);
+                        this.options.thumbnail.call(this, file, file.preview ?? file.preview_url);
+                        file.previewElement.classList.add('dz-complete');
+                        $('form').append('<input type="file" name="image" value="' + file.file_name +
+                            '">');
+                        this.options.maxFiles = this.options.maxFiles - 1;
+                    @endif
+                },
+                error: function(file, response) {
+                    var message = ($.type(response) === 'string') ? response : response.errors.file;
+                    file.previewElement.classList.add('dz-error');
+                    _ref = file.previewElement.querySelectorAll('[data-dz-errormessage]');
+                    _results = [];
+                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                        node = _ref[_i];
+                        _results.push(node.textContent = message);
+                    }
+                    return _results;
                 }
-            }
-
-            if (email == '') {
-                $('.email_error').html('Email must be filled');
-                arr.push('email');
-            } else {
-                $('.email_error').html('');
-                if (arr.includes("email")) {
-                    arr.splice(arr.indexOf('email'), 1);
-                }
-            }
-
-            if (password == '') {
-                $('.password_error').html('Password must be filled');
-                arr.push('password');
-            } else {
-                $('.password_error').html('');
-                if (arr.includes("password")) {
-                    arr.splice(arr.indexOf('password'), 1);
-                }
-            }
-
-            if (arr.length == 0) {
-                document.getElementById("myForm").submit();
-            }
-        }
+            });
+        });
     </script>
-@endsection --}}
+@endsection

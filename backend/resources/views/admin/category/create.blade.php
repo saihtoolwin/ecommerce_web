@@ -33,7 +33,7 @@
                 @csrf
                 <div class="row">
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="required" for="parent_id">{{ trans('cruds.category.fields.parent_id') }}</label>
                             <input class="form-control {{ $errors->has('parent_id') ? 'is-invalid' : ' ' }}" type="text"
                                 name="parent_id" id="parent_id" value="{{ old('parent_id', '') }}">
@@ -43,8 +43,16 @@
                                     {{ $errors->first('parent_id') }}
                                 </div>
                             @endif
+                        </div> --}}
+                        <div class="k-d-flex k-justify-content-center">
+                            <div class="k-w-300">
+                                <label for="dropdowntree-single">Single Selection:</label>
+                                <input id="dropdowntree-single" />
+                                <input type="hidden" name="parent_id" id="parent_id" />
+                            </div>
                         </div>
                     </div>
+
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label class="" for="name">{{ trans('cruds.category.fields.name') }}</label>
@@ -106,15 +114,16 @@
                         response
                     });
                     $('form').find('input[name="image"]').remove();
-                    $('form').append('<input type="hidden" name="image" class="d-none" value="' + response.name +
-                    '">');
+                    $('form').append('<input type="hidden" name="image" class="d-none" value="' +
+                        response.name +
+                        '">');
                 },
                 removedfile: function(file) {
-                    
+
                     $('form').find('input[name="image"]').remove();
-                    
+
                     file.previewElement.remove();
-                    
+
                     this.options.maxFiles = this.options.maxFiles + 1;
                 },
                 init: function() {
@@ -141,6 +150,65 @@
                     return _results;
                 }
             });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            var categories = @json($categories);
+            console.log(categories);
+
+            function buildTree(categories, parentId = null) {
+                let result = [];
+                categories.forEach(category => {
+                    if (category.parent_id === parentId) {
+                        console.log(category.parent_id)
+                        let children = buildTree(categories, category.id);
+                        console.log(children)
+
+                        let node = {
+                            text: category.name,
+                            id: category.id
+                        };
+                        if (children.length) {
+                            node.items = children;
+                        }
+                        result.push(node);
+                    }
+                });
+                return result;
+            }
+
+            var treeData = buildTree(categories);
+            var ddtSingle = $("#dropdowntree-single").kendoDropDownTree({
+                placeholder: "Select a category...",
+                dataSource: treeData,
+                dataTextField: "text",
+                dataValueField: "id",
+                select: function(e) {
+                    var dataItem = this.dataItem(e.node);
+                    $("#parent_id").val(dataItem.id); // Update hidden input with selected category ID
+                }
+            }).data("kendoDropDownTree");
+
+
+            function onChange(e) {
+                var sizeValue = size.value();
+                var roundedValue = rounded.value();
+                var fillValue = fill.value();
+                // var selectedValues = ddtMultiple.value();
+                ddtSingle.setOptions({
+                    size: sizeValue,
+                    rounded: roundedValue,
+                    fillMode: fillValue
+                })
+                // ddtMultiple.value([]);
+                // ddtMultiple.setOptions({
+                //     size: sizeValue,
+                //     rounded: roundedValue,
+                //     fillMode: fillValue
+                // })
+                // ddtMultiple.value(selectedValues);
+            }
         });
     </script>
 @endsection

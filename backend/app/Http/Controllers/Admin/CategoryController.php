@@ -25,13 +25,15 @@ class CategoryController extends Controller
     
     public function create()
     {
-        return view('admin.category.create');
+        $categories = $this->categories->select('id', 'parent_id','name')->get();
+    // dd($categories);
+        return view('admin.category.create',compact('categories'));
     }
 
    
     public function store(StoreCategoryRequest $request)
     {
-        // dd($request->all());
+        dd($request->all());
         $category=$this->categories->create($request->all());
         
     
@@ -59,7 +61,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category=$this->categories->findOrFail($id);
-        return view('admin.category.edit',compact(['products','users','category']));
+        return view('admin.category.edit',compact(['category']));
     }
 
    
@@ -67,7 +69,7 @@ class CategoryController extends Controller
     {
         $category = $this->categories->findOrFail($id);
        $category->update($request->all());
-       return redirect()->route('admin.category.index')->with('message',' category Updated Successfully');
+       return redirect()->route('admin.category.index')->with('message',' Category Updated Successfully');
     }
 
     
@@ -76,7 +78,7 @@ class CategoryController extends Controller
         $category=$this->categories->findOrFail($id);
         
         $category->delete();
-        return redirect()->route('admin.category.index')->with('message','category Deleted successfully');
+        return redirect()->route('admin.category.index')->with('message','Category Deleted successfully');
     }
 }
 
