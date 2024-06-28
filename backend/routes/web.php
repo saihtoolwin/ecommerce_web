@@ -32,6 +32,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
     // media
     Route::post('posts/media','PostController@storeMedia')->name('posts.storeMedia');
 
+    // order
+    Route::resource('/order','OrderController');
+
+     // order Product
+     Route::resource('/order-product','OrderProductController');
+
 });
 
 // Route::post('image/upload/store', [MultiImageUploadController::class, 'fileStore']);

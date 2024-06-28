@@ -1,4 +1,12 @@
 @extends('layouts.admin')
+@section('styles')
+<style>
+    td img{
+        height: 300px;
+    }
+</style>
+    
+@endsection
 @section('content')
 
 <div class="card">

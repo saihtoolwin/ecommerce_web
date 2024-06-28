@@ -33,7 +33,7 @@ class CategoryController extends Controller
    
     public function store(StoreCategoryRequest $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $category=$this->categories->create($request->all());
         
     
@@ -53,7 +53,6 @@ class CategoryController extends Controller
     public function show($id)
     {
         $category=$this->categories->findOrFail($id);
-        
         return view('admin.category.show',compact(['category']));
     }
 
@@ -61,12 +60,14 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category=$this->categories->findOrFail($id);
-        return view('admin.category.edit',compact(['category']));
+        $categories = $this->categories->select('id', 'parent_id','name')->get();
+        return view('admin.category.edit',compact(['category','categories']));
     }
 
    
     public function update(UpdateCategoryRequest $request, $id)
     {
+        // dd($request->all());
         $category = $this->categories->findOrFail($id);
        $category->update($request->all());
        return redirect()->route('admin.category.index')->with('message',' Category Updated Successfully');

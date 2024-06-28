@@ -2,32 +2,38 @@
 @section('content')
     <div class="card ">
         <div class="custom-header  d-flex justify-content-between px-3">
-            <p class="mt-3" style="font-size: 20px">{{ trans('cruds.category.title_singular') }} {{ trans('global.list') }}
-            </p>
-            <div>
-                <a class="mt-3 btn btn-success" href="{{ route('admin.category.create') }}">
-                    {{ trans('global.add') }} {{ trans('cruds.category.title_singular') }}
-                </a>
-            </div>
+            <p class="mt-3" style="font-size: 20px">{{ trans('cruds.order.title_singular') }} {{ trans('global.list') }}</p>
         </div>
 
         <div class="card-body text-center">
             <div class="table-responsive">
-                <table  id="dataTable" style="width:100%" class="display table table-bordered table-striped table-hover ">
+                <table class=" table table-bordered table-striped table-hover datatable datatable-order">
                     <thead>
                         <tr>
                             <th>
-                                {{ trans('cruds.category.fields.no') }}
+                                {{ trans('cruds.order.fields.no') }}
                             </th>
                             <th>
-                                {{ trans('cruds.category.fields.parent_id') }}
+                                {{ trans('cruds.order.fields.name') }}
                             </th>
-                            <th>
-                                {{ trans('cruds.category.fields.name') }}
+                            {{-- <th>
+                                {{ trans('cruds.order.fields.price') }}
                             </th>
 
                             <th>
-                                {{ trans('cruds.category.fields.image') }}
+                                {{ trans('cruds.order.fields.qty') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.order.fields.discount') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.order.fields.category_id') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.order.fields.rating_id') }}
+                            </th> --}}
+                            <th>
+                                {{ trans('cruds.order.fields.status') }}
                             </th>
                             <th>
                                 {{ trans('global.actions') }}
@@ -35,40 +41,47 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($categories as $key => $category)
-                            <tr data-entry-id="{{ $category->id }}">
+                        @foreach ($orders as $key => $order)
+                            <tr data-entry-id="{{ $order->id }}">
                                 <td>
                                     {{ $loop->iteration ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $category->parent_id ?? '' }}
+                                    {{ $order->user->name ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $category->name ?? '' }}
+                                    {{ $order->status ?? '' }}
+                                </td>
+                                {{-- <td>
+                                    {{ $order->qty ?? '' }}
                                 </td>
                                 <td>
-                                    @if ($category->image)
-                                        <img src="{{ $category->image->getUrl('preview') }}" alt="{{ $category->name }}"
-                                            style="max-width: 100px;">
-                                    @else
-                                        No image available
-                                    @endif
+                                    {{ $order->discount ?? '' }}
                                 </td>
+                                <td>
+                                    {{ $order->category_id ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $order->rating_id ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $order->description ?? '' }}
+                                </td> --}}
                                 <td>
                                     <a class="p-0 glow text-white btn btn-primary"
                                         style="width: 60px;display: inline-block;line-height: 36px;color:grey;"
-                                        title="view" href="{{ route('admin.category.show', $category->id) }}">
+                                        title="view" href="{{ route('admin.order.show', $order->id) }}">
                                         Show
                                     </a>
 
                                     <a class="p-0 glow text-white btn btn-success"
                                         style="width: 60px;display: inline-block;line-height: 36px;color:grey;"
-                                        title="edit" href="{{ route('admin.category.edit', $category->id) }}">
+                                        title="edit" href="{{ route('admin.order.edit', $order->id) }}">
                                         Edit
                                     </a>
 
-                                    <form id="orderDelete-{{ $category->id }}"
-                                        action="{{ route('admin.category.destroy', $category->id) }}" method="POST"
+                                    <form id="orderDelete-{{ $order->id }}"
+                                        action="{{ route('admin.order.destroy', $order->id) }}" method="POST"
                                         style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -88,7 +101,7 @@
                     </tbody>
                 </table>
                 <div class="mt-3" style="float: right;">
-                    {{-- {{ $categorys->links() }} --}}
+                    {{-- {{ $orders->links() }} --}}
                 </div>
             </div>
         </div>
@@ -99,11 +112,11 @@
     <script>
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-            @can('category_delete')
+            @can('order_delete')
                 let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.categorys.massDestroy') }}",
+                    url: "{{ route('admin.orders.massDestroy') }}",
                     className: 'btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -148,7 +161,7 @@
                 bPaginate: false,
                 info: false,
             });
-            let table = $('.datatable-category:not(.ajaxTable)').DataTable({
+            let table = $('.datatable-order:not(.ajaxTable)').DataTable({
                 buttons: dtButtons
             })
             $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {

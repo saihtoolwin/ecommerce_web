@@ -16,7 +16,8 @@ class Category extends Model implements HasMedia
     protected $appends = ['image'];
     protected $fillable = [
         'name',
-        // 'image',
+        'parent_id',
+        'image',
     ];
 
     public function registerMediaConversions(Media $media = null): void

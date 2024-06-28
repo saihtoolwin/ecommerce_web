@@ -71,6 +71,27 @@ return [
             'updated_at' => 'Updated At'
         ],
     ],
-    
+    'order'=>[
+        'title' => 'Order',
+        'title_singular' => 'Order Title',
+        'fields'    =>[
+            'no'    => 'No',
+            'id'=>'ID',
+            // 'user_id'=>'Name',
+            'name' => 'Name',
+            'status' => 'Status'
+        ],
+    ],
+    'order_product' => [
+        'title' => 'Order Product',
+        'title_singular' => 'Order Product',
+        'fields' => [
+            'no'    => 'No',
+            'id' => 'ID',
+            'order_id' => 'Order',
+            'product_id' => 'Product',
+            'price' => 'Price',
+        ],
+    ],
 
 ];

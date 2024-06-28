@@ -22,18 +22,24 @@
             border: 2px dashed #3498db !important;
             border-radius: 5px;
         }
+
+        /* button, input, optgroup, select, textarea{
+                display: none !important;
+            } */
     </style>
 @endsection
 @section('content')
     <div class="card">
-        <h5 class="card-header font-weight-bold "> {{ trans('global.create') }} {{ trans('cruds.category.title_singular') }}
+        <h5 class="card-header font-weight-bold "> {{ trans('global.edit') }} {{ trans('cruds.category.title_singular') }}
         </h5>
         <div class="card-body mt-4">
-            <form method="POST" action="{{ route('admin.category.store') }}" enctype="multipart/form-data" id="myForm">
+            <form method="POST" action="{{ route('admin.category.update', $category->id) }}" enctype="multipart/form-data"
+                id="myForm">
                 @csrf
+                @method('PUT')
                 <div class="row">
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="required" for="parent_id">{{ trans('cruds.category.fields.parent_id') }}</label>
                             <input class="form-control {{ $errors->has('parent_id') ? 'is-invalid' : ' ' }}" type="text"
                                 name="parent_id" id="parent_id" value="{{ old('parent_id',$category->parent_id) }}">
@@ -43,6 +49,14 @@
                                     {{ $errors->first('parent_id') }}
                                 </div>
                             @endif
+                        </div> --}}
+                        <div class="k-d-flex k-justify-content-center">
+                            <div class="k-w-300">
+                                <label for="dropdowntree-single">Parent Category</label>
+                                <input id="dropdowntree-single" />
+                                <input type="hidden" name="parent_id" id="parent_id"
+                                    value="{{ old('parent_id', $category->parent_id) }}" />
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
@@ -106,15 +120,16 @@
                         response
                     });
                     $('form').find('input[name="image"]').remove();
-                    $('form').append('<input type="hidden" name="image" class="d-none" value="' + response.name +
-                    '">');
+                    $('form').append('<input type="hidden" name="image" class="d-none" value="' +
+                        response.name +
+                        '">');
                 },
                 removedfile: function(file) {
-                    
+
                     $('form').find('input[name="image"]').remove();
-                    
+
                     file.previewElement.remove();
-                    
+
                     this.options.maxFiles = this.options.maxFiles + 1;
                 },
                 init: function() {
@@ -124,7 +139,7 @@
                         this.options.addedfile.call(this, file);
                         this.options.thumbnail.call(this, file, file.preview ?? file.preview_url);
                         file.previewElement.classList.add('dz-complete');
-                        $('form').append('<input type="file" name="image" value="' + file.file_name +
+                        $('form').append('<input type="file" name="image" class="d-none" value="' + file.file_name +
                             '">');
                         this.options.maxFiles = this.options.maxFiles - 1;
                     @endif
@@ -141,6 +156,92 @@
                     return _results;
                 }
             });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            var categories = @json($categories);
+            var selectedCategoryId = @json($category->parent_id);
+    
+            console.log(selectedCategoryId + 'ss');
+    
+            function buildTree(categories, parentId = null) {
+                let result = [];
+                categories.forEach(category => {
+                    if (category.parent_id === parentId) {
+                        console.log(category.parent_id);
+                        let children = buildTree(categories, category.id);
+                        console.log(children);
+    
+                        let node = {
+                            text: category.name,
+                            id: category.id
+                        };
+                        if (children.length) {
+                            node.items = children;
+                        }
+                        result.push(node);
+                    }
+                });
+                return result;
+            }
+    
+            var treeData = buildTree(categories);
+    
+            function findNodePath(data, id, path = []) {
+                for (let i = 0; i < data.length; i++) {
+                    let node = data[i];
+                    let currentPath = path.concat(node.id);
+                    if (node.id === id) {
+                        return currentPath;
+                    } else if (node.items) {
+                        let foundPath = findNodePath(node.items, id, currentPath);
+                        if (foundPath.length) {
+                            return foundPath;
+                        }
+                    }
+                }
+                return [];
+            }
+    
+            function expandToNode(ddt, id) {
+                let path = findNodePath(treeData, id);
+                if (path.length) {
+                    path.forEach(nodeId => {
+                        let nodeElement = ddt.treeview.findByUid(ddt.treeview.dataSource.get(nodeId).uid);
+                        if (nodeElement.length) {
+                            ddt.treeview.expand(nodeElement);
+                        }
+                    });
+                    ddt.value(id); 
+                }
+            }
+    
+            var ddtSingle = $("#dropdowntree-single").kendoDropDownTree({
+                placeholder: "Select a category...",
+                dataSource: treeData,
+                dataTextField: "text",
+                dataValueField: "id",
+                select: function(e) {
+                    var dataItem = this.dataItem(e.node);
+                    $("#parent_id").val(dataItem.id); 
+                }
+            }).data("kendoDropDownTree");
+    
+            if (selectedCategoryId) {
+                expandToNode(ddtSingle, selectedCategoryId);
+            }
+    
+            function onChange(e) {
+                var sizeValue = size.value();
+                var roundedValue = rounded.value();
+                var fillValue = fill.value();
+                ddtSingle.setOptions({
+                    size: sizeValue,
+                    rounded: roundedValue,
+                    fillMode: fillValue
+                });
+            }
         });
     </script>
 @endsection
