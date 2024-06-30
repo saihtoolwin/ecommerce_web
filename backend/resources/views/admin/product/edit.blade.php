@@ -70,7 +70,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
+                    {{-- <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
                         <div class="form-group">
                             <label class="required" for="discount">{{ trans('cruds.product.fields.discount') }}</label>
                             <input class="form-control {{ $errors->has('discount') ? 'is-invalid' : '' }}"
@@ -83,7 +83,7 @@
                                 </div>
                             @endif
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
                         <div class="form-group">
                             <label class="required"

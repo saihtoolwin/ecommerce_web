@@ -14,7 +14,7 @@ return new class extends Migration
             $table->text('description');
             $table->decimal('price', 10, 2);
             $table->integer('qty');
-            $table->decimal('discount', 5, 2);
+            // $table->foreignId('discount_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('category_id');
             // $table->unsignedBigInteger('rating_id')->nullable();
             $table->string('image'); 

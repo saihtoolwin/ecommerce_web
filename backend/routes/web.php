@@ -38,6 +38,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
      // order Product
      Route::resource('/order-product','OrderProductController');
 
+     // Discount
+     Route::resource('/discount','DiscountController');
+
 });
 
 // Route::post('image/upload/store', [MultiImageUploadController::class, 'fileStore']);

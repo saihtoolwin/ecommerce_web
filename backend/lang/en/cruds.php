@@ -93,5 +93,20 @@ return [
             'price' => 'Price',
         ],
     ],
+    'discount' => [
+        'title' => 'Discount',
+        'title_singular' => 'Discount',
+        'fields' => [
+            'no' => 'No',
+            'id' => 'ID',
+            'product_id' => 'Product',
+            'name' => 'Name',
+            'percentage' => 'Percentage',
+            'start_date' => 'Start Date',
+            'end_date' => 'End Date',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+        ],
+    ],
 
 ];
